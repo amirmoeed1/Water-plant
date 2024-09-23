@@ -28,13 +28,15 @@ const Dashboard = () => {
     <div>
       {/* Navbar with Logout Button */}
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="container">
-          <h3 className="text-primary fw-bold">Welcome to: Ijaz Ahmad Water-Plant</h3>
-          <button className="btn btn-danger ms-5" onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
-      </nav>
+  <div className="container">
+    <h3 className="text-primary fw-bold">Welcome to: Ijaz Ahmad Water-Plant</h3>
+    <div className="ms-auto mt-md-5"> {/* Center and add margin-top on medium screens */}
+      <button className="btn btn-danger" onClick={handleLogout}>
+        Logout
+      </button>
+    </div>
+  </div>
+</nav>
 
       <div className="container mt-5">
         <h2 className="mb-4">Dashboard</h2>
