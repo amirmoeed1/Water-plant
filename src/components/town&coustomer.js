@@ -123,13 +123,13 @@ const TownCustomerManagement = () => {
     }
   };
 
-  const handleEditCustomer = (customer) => {
-    setNewCustomer(customer.name);
-    setNewPhone(customer.phone);
-    setNewAddress(customer.address);
-    setNewQuantity(customer.quantity);
-    setEditCustomer(customer);
-  };
+  // const handleEditCustomer = (customer) => {
+  //   setNewCustomer(customer.name);
+  //   setNewPhone(customer.phone);
+  //   setNewAddress(customer.address);
+  //   setNewQuantity(customer.quantity);
+  //   setEditCustomer(customer);
+  // };
 
   const handleDeleteCustomer = async (customerId) => {
     if (window.confirm('Are you sure you want to delete this customer?')) {

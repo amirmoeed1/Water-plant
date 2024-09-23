@@ -40,7 +40,7 @@ const Dashboard = () => {
       <div className="container mt-5">
         <h2 className="mb-4">Dashboard</h2>
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-lg-3">
             <div className="card text-center mb-4">
               <div className="card-body">
                 <h5 className="card-title">New Customer&Town Add</h5>
@@ -49,7 +49,7 @@ const Dashboard = () => {
             </div>
           </div>
          
-          <div className="col-md-3">
+          <div className="col-lg-3">
             <div className="card text-center mb-4">
               <div className="card-body">
                 <h5 className="card-title">Payment</h5>
@@ -57,7 +57,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          <div className="col-md-3">
+          <div className="col-lg-3">
             <div className="card text-center mb-4">
               <div className="card-body">
                 <h5 className="card-title">Monthly Report</h5>
@@ -65,7 +65,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          <div className="col-md-3">
+          <div className="col-lg-3">
             <div className="card text-center mb-4">
               <div className="card-body">
                 <h5 className="card-title">Customer Information</h5>
