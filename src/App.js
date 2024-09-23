@@ -6,7 +6,7 @@ import Delivery from './components/deliverypage';
 import Payment from './components/payment';
 import Report from './components/monthlyreport';
 import Dashboard from './components/dashboard';
-// import Logout from './components/logout';
+// import TownCustomerForm from './components/customerForm';
 import TownCustomersList from './components/customerdata';
 // import Deliverypage from './components/deliverypage';
  
@@ -18,7 +18,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        {/* <Route path="/logout" element={<Logout />} /> */}
+        {/* <Route path="/customerform" element={<Logout />} /> */}
         <Route path="/dilivery" element={<Delivery />} />
         <Route path="/customerdata" element={<TownCustomersList />} />
       

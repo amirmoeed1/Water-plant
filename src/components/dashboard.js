@@ -39,15 +39,16 @@ const Dashboard = () => {
       <div className="container mt-5">
         <h2 className="mb-4">Dashboard</h2>
         <div className="row">
-          <div className="col-md-4">
+          <div className="col-md-3">
             <div className="card text-center mb-4">
               <div className="card-body">
-                <h5 className="card-title">Customer</h5>
+                <h5 className="card-title">New Customer & Town Add</h5>
                 <Link to="/towns-customers" className="btn btn-primary">Go to Towns & Customers</Link>
               </div>
             </div>
           </div>
-          <div className="col-md-4">
+         
+          <div className="col-md-3">
             <div className="card text-center mb-4">
               <div className="card-body">
                 <h5 className="card-title">Payment</h5>
@@ -55,11 +56,19 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-3">
             <div className="card text-center mb-4">
               <div className="card-body">
                 <h5 className="card-title">Monthly Report</h5>
                 <Link to="/report" className="btn btn-primary">Go to Monthly Report</Link>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-3">
+            <div className="card text-center mb-4">
+              <div className="card-body">
+                <h5 className="card-title">Customer Information</h5>
+                <Link to="/customerdata" className="btn btn-primary">Check Customer detail</Link>
               </div>
             </div>
           </div>

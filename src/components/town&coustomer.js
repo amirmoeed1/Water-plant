@@ -296,7 +296,7 @@ const TownCustomerManagement = () => {
           {selectedCustomer && (
             <>
               <button className="btn btn-danger" onClick={() => handleDeleteCustomer(selectedCustomer)}>Delete Customer</button>
-              <button className="btn btn-primary ml-2" onClick={handleNavigateToDelivery}>Navigate to Delivery</button>
+              <button className="btn btn-primary ml-2" onClick={handleNavigateToDelivery}>Go to Delivery</button>
             </>
           )}
         </div>
