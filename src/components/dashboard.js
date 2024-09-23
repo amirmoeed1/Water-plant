@@ -42,7 +42,7 @@ const Dashboard = () => {
           <div className="col-md-3">
             <div className="card text-center mb-4">
               <div className="card-body">
-                <h5 className="card-title">New Customer & Town Add</h5>
+                <h5 className="card-title">New Customer&Town Add</h5>
                 <Link to="/towns-customers" className="btn btn-primary">Go to Towns & Customers</Link>
               </div>
             </div>
