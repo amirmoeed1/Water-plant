@@ -1,0 +1,39 @@
+ /* TownCustomerManagement.css */
+
+ .container {
+    background-color: #f4f4f9; /* Light background color */
+    /* background-image: url('path/to/your/background-image.jpg');   */
+    background-size: cover; /* Ensure the image covers the entire background */
+    background-position: center; /* Center the background image */
+    padding: 20px; /* Add padding to the container */
+    border-radius: 10px; /* Rounded corners */
+  }
+  
+  .header {
+    color: #333; /* Dark text color */
+    margin-bottom: 20px;
+  }
+  
+  .input-container {
+    margin-bottom: 20px; /* Space between input sections */
+  }
+  
+  button {
+    background-color: #007bff; /* Blue button color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px; /* Rounded corners for the button */
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+  
+  select {
+    padding: 10px;
+    border-radius: 5px; /* Rounded corners for the select element */
+  }
+  
+  
