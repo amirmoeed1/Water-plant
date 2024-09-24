@@ -320,7 +320,7 @@ const TownCustomerManagement = () => {
               value={customerSearch}
               onChange={handleCustomerInputChange}
               onKeyPress={handleCustomerSearchKeyPress}
-              disabled={!selectedTown} // Disable if no town selected
+              disabled={!selectedTown} // Disable if no to
             />
             {showCustomerSuggestions && (
               <ul className="list-group position-absolute mt-5 suggestion-dropdown" style={{ zIndex: 10 }}>
