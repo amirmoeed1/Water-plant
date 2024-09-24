@@ -17,6 +17,8 @@ const TownCustomerManagement = () => {
   const [editCustomer, setEditCustomer] = useState(null);
   const [townSearch, setTownSearch] = useState('');
   const [customerSearch, setCustomerSearch] = useState('');
+  const [showTownSuggestions, setShowTownSuggestions] = useState(false);
+  const [showCustomerSuggestions, setShowCustomerSuggestions] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -102,6 +104,8 @@ const TownCustomerManagement = () => {
     const townId = e.target.value;
     setSelectedTown(townId);
     fetchCustomers(townId);
+    setCustomerSearch(''); // Clear customer search when changing town
+    setSelectedCustomer(''); // Reset selected customer
   };
 
   const handleNavigateToDelivery = () => {
@@ -122,14 +126,6 @@ const TownCustomerManagement = () => {
       }
     }
   };
-
-  // const handleEditCustomer = (customer) => {
-  //   setNewCustomer(customer.name);
-  //   setNewPhone(customer.phone);
-  //   setNewAddress(customer.address);
-  //   setNewQuantity(customer.quantity);
-  //   setEditCustomer(customer);
-  // };
 
   const handleDeleteCustomer = async (customerId) => {
     if (window.confirm('Are you sure you want to delete this customer?')) {
@@ -156,6 +152,7 @@ const TownCustomerManagement = () => {
       if (foundTown) {
         setSelectedTown(foundTown._id);
         setTownSearch('');
+        setShowTownSuggestions(false);
         fetchCustomers(foundTown._id);
       }
     }
@@ -167,6 +164,7 @@ const TownCustomerManagement = () => {
       if (foundCustomer) {
         setSelectedCustomer(foundCustomer._id);
         setCustomerSearch('');
+        setShowCustomerSuggestions(false);
       }
     }
   };
@@ -176,6 +174,31 @@ const TownCustomerManagement = () => {
     if (/^\d*$/.test(inputValue)) {
       setNewPhone(inputValue);
     }
+  };
+
+  // Show town suggestions when typing
+  const handleTownInputChange = (e) => {
+    setTownSearch(e.target.value);
+    setShowTownSuggestions(e.target.value.trim() !== ''); // Show suggestions only if there's input
+  };
+
+  // Show customer suggestions when typing
+  const handleCustomerInputChange = (e) => {
+    setCustomerSearch(e.target.value);
+    setShowCustomerSuggestions(e.target.value.trim() !== ''); // Show suggestions only if there's input
+  };
+
+  const handleTownSuggestionClick = (town) => {
+    setSelectedTown(town._id);
+    setTownSearch('');
+    setShowTownSuggestions(false);
+    fetchCustomers(town._id);
+  };
+
+  const handleCustomerSuggestionClick = (customer) => {
+    setSelectedCustomer(customer._id);
+    setCustomerSearch('');
+    setShowCustomerSuggestions(false);
   };
 
   return (
@@ -209,14 +232,27 @@ const TownCustomerManagement = () => {
               className="form-control"
               placeholder="Search Town"
               value={townSearch}
-              onChange={(e) => setTownSearch(e.target.value)}
+              onChange={handleTownInputChange}
               onKeyPress={handleTownSearchKeyPress}
             />
+            {showTownSuggestions && (
+              <ul className="list-group position-absolute mt-5 suggestion-dropdown" style={{ zIndex: 10 }}>
+                {filteredTowns.map((town) => (
+                  <li
+                    key={town._id}
+                    className="list-group-item"
+                    onClick={() => handleTownSuggestionClick(town)}
+                  >
+                    {town.town} {/* Only show the town name */}
+                  </li>
+                ))}
+              </ul>
+            )}
             <select className="form-select" onChange={handleTownChange} value={selectedTown}>
               <option value="">Select a Town</option>
               {filteredTowns.map((town) => (
                 <option key={town._id} value={town._id}>
-                  {town?.town}
+                  {town.town}
                 </option>
               ))}
             </select>
@@ -230,7 +266,7 @@ const TownCustomerManagement = () => {
 
       <div className='row'>
         <div className='col-md-6 mb-4'>
-          <h4>Add/Edit Customer</h4>
+          <h4>Add Customer</h4>
           <div className="input-group mb-3">
             <input
               type="text"
@@ -238,7 +274,9 @@ const TownCustomerManagement = () => {
               placeholder="New Customer"
               value={newCustomer}
               onChange={(e) => setNewCustomer(e.target.value)}
+              disabled={!selectedTown} // Disable if no town selected
             />
+            <button className="btn btn-primary" onClick={handleAddCustomer} disabled={!selectedTown}>Add Customer</button>
           </div>
           <div className="input-group mb-3">
             <input
@@ -247,6 +285,7 @@ const TownCustomerManagement = () => {
               placeholder="Phone Number"
               value={newPhone}
               onChange={handlePhoneInputChange}
+              disabled={!selectedTown} // Disable if no town selected
             />
           </div>
           <div className="input-group mb-3">
@@ -256,6 +295,7 @@ const TownCustomerManagement = () => {
               placeholder="Address"
               value={newAddress}
               onChange={(e) => setNewAddress(e.target.value)}
+              disabled={!selectedTown} // Disable if no town selected
             />
           </div>
           <div className="input-group mb-3">
@@ -265,25 +305,37 @@ const TownCustomerManagement = () => {
               placeholder="Quantity of Cans"
               value={newQuantity}
               onChange={(e) => setNewQuantity(e.target.value)}
+              disabled={!selectedTown} // Disable if no town selected
             />
           </div>
-          <button className="btn btn-success" onClick={handleAddCustomer}>
-            {editCustomer ? 'Update Customer' : 'Add Customer'}
-          </button>
         </div>
 
         <div className='col-md-6 mb-4'>
-          <h4>Select Customer for Delivery</h4>
+          <h4>Select a Customer</h4>
           <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
               placeholder="Search Customer"
               value={customerSearch}
-              onChange={(e) => setCustomerSearch(e.target.value)}
+              onChange={handleCustomerInputChange}
               onKeyPress={handleCustomerSearchKeyPress}
+              disabled={!selectedTown} // Disable if no town selected
             />
-            <select className="form-select" onChange={(e) => setSelectedCustomer(e.target.value)} value={selectedCustomer}>
+            {showCustomerSuggestions && (
+              <ul className="list-group position-absolute mt-5 suggestion-dropdown" style={{ zIndex: 10 }}>
+                {filteredCustomers.map((customer) => (
+                  <li
+                    key={customer._id}
+                    className="list-group-item"
+                    onClick={() => handleCustomerSuggestionClick(customer)}
+                  >
+                    {customer.name} {/* Only show the customer name */}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <select className="form-select" onChange={(e) => setSelectedCustomer(e.target.value)} value={selectedCustomer} disabled={!selectedTown}>
               <option value="">Select a Customer</option>
               {filteredCustomers.map((customer) => (
                 <option key={customer._id} value={customer._id}>
@@ -294,12 +346,13 @@ const TownCustomerManagement = () => {
           </div>
 
           {selectedCustomer && (
-            <>
-              <button className="btn btn-danger" onClick={() => handleDeleteCustomer(selectedCustomer)}>Delete Customer</button>
-              <button className="btn btn-primary ml-2" onClick={handleNavigateToDelivery}>Go to Delivery</button>
-            </>
+            <button className="btn btn-danger" onClick={() => handleDeleteCustomer(selectedCustomer)}>Delete Customer</button>
           )}
         </div>
+      </div>
+
+      <div className='text-center'>
+        <button className="btn btn-success" onClick={handleNavigateToDelivery} disabled={!selectedCustomer}>Proceed to Delivery</button>
       </div>
     </div>
   );
