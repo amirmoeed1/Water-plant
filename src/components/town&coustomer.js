@@ -104,8 +104,6 @@ const TownCustomerManagement = () => {
     const townId = e.target.value;
     setSelectedTown(townId);
     fetchCustomers(townId);
-    setCustomerSearch(''); // Clear customer search when changing town
-    setSelectedCustomer(''); // Reset selected customer
   };
 
   const handleNavigateToDelivery = () => {
@@ -179,13 +177,13 @@ const TownCustomerManagement = () => {
   // Show town suggestions when typing
   const handleTownInputChange = (e) => {
     setTownSearch(e.target.value);
-    setShowTownSuggestions(e.target.value.trim() !== ''); // Show suggestions only if there's input
+    setShowTownSuggestions(true); // Show the suggestions dropdown
   };
 
   // Show customer suggestions when typing
   const handleCustomerInputChange = (e) => {
     setCustomerSearch(e.target.value);
-    setShowCustomerSuggestions(e.target.value.trim() !== ''); // Show suggestions only if there's input
+    setShowCustomerSuggestions(true); // Show the suggestions dropdown
   };
 
   const handleTownSuggestionClick = (town) => {
@@ -226,7 +224,7 @@ const TownCustomerManagement = () => {
 
         <div className='col-md-6 mb-4'>
           <h4>Select a Town</h4>
-          <div className="input-group mb-3">
+          <div className="input-group mb-3 ">
             <input
               type="text"
               className="form-control"
@@ -236,14 +234,14 @@ const TownCustomerManagement = () => {
               onKeyPress={handleTownSearchKeyPress}
             />
             {showTownSuggestions && (
-              <ul className="list-group position-absolute mt-5 suggestion-dropdown" style={{ zIndex: 10 }}>
+              <ul className="list-group position-absolute mt-5 suggestion-dropdown">
                 {filteredTowns.map((town) => (
                   <li
                     key={town._id}
                     className="list-group-item"
                     onClick={() => handleTownSuggestionClick(town)}
                   >
-                    {town.town} {/* Only show the town name */}
+                    {town?.town}
                   </li>
                 ))}
               </ul>
@@ -252,31 +250,29 @@ const TownCustomerManagement = () => {
               <option value="">Select a Town</option>
               {filteredTowns.map((town) => (
                 <option key={town._id} value={town._id}>
-                  {town.town}
+                  {town?.town}
                 </option>
               ))}
             </select>
           </div>
 
           {selectedTown && (
-            <button className="btn btn-danger" onClick={() => handleDeleteTown(selectedTown)}>Delete Town</button>
+            <button className="btn btn-danger mst-1 " onClick={() => handleDeleteTown(selectedTown)}>Delete Town</button>
           )}
         </div>
       </div>
 
       <div className='row'>
         <div className='col-md-6 mb-4'>
-          <h4>Add Customer</h4>
+          <h4>Add/Edit Customer</h4>
           <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
-              placeholder="New Customer"
+              placeholder="Customer Name"
               value={newCustomer}
               onChange={(e) => setNewCustomer(e.target.value)}
-              disabled={!selectedTown} // Disable if no town selected
             />
-            <button className="btn btn-primary" onClick={handleAddCustomer} disabled={!selectedTown}>Add Customer</button>
           </div>
           <div className="input-group mb-3">
             <input
@@ -285,7 +281,6 @@ const TownCustomerManagement = () => {
               placeholder="Phone Number"
               value={newPhone}
               onChange={handlePhoneInputChange}
-              disabled={!selectedTown} // Disable if no town selected
             />
           </div>
           <div className="input-group mb-3">
@@ -295,7 +290,6 @@ const TownCustomerManagement = () => {
               placeholder="Address"
               value={newAddress}
               onChange={(e) => setNewAddress(e.target.value)}
-              disabled={!selectedTown} // Disable if no town selected
             />
           </div>
           <div className="input-group mb-3">
@@ -305,9 +299,11 @@ const TownCustomerManagement = () => {
               placeholder="Quantity of Cans"
               value={newQuantity}
               onChange={(e) => setNewQuantity(e.target.value)}
-              disabled={!selectedTown} // Disable if no town selected
             />
           </div>
+          <button className="btn btn-primary" onClick={handleAddCustomer}>
+            {editCustomer ? 'Update Customer' : 'Add Customer'}
+          </button>
         </div>
 
         <div className='col-md-6 mb-4'>
@@ -320,22 +316,21 @@ const TownCustomerManagement = () => {
               value={customerSearch}
               onChange={handleCustomerInputChange}
               onKeyPress={handleCustomerSearchKeyPress}
-              disabled={!selectedTown} // Disable if no to
             />
             {showCustomerSuggestions && (
-              <ul className="list-group position-absolute mt-5 suggestion-dropdown" style={{ zIndex: 10 }}>
+              <ul className="list-group position-absolute suggestion-dropdown">
                 {filteredCustomers.map((customer) => (
                   <li
                     key={customer._id}
                     className="list-group-item"
                     onClick={() => handleCustomerSuggestionClick(customer)}
                   >
-                    {customer.name} {/* Only show the customer name */}
+                    {customer.name}
                   </li>
                 ))}
               </ul>
             )}
-            <select className="form-select" onChange={(e) => setSelectedCustomer(e.target.value)} value={selectedCustomer} disabled={!selectedTown}>
+            <select className="form-select" value={selectedCustomer} onChange={(e) => setSelectedCustomer(e.target.value)}>
               <option value="">Select a Customer</option>
               {filteredCustomers.map((customer) => (
                 <option key={customer._id} value={customer._id}>
@@ -351,8 +346,8 @@ const TownCustomerManagement = () => {
         </div>
       </div>
 
-      <div className='text-center'>
-        <button className="btn btn-success" onClick={handleNavigateToDelivery} disabled={!selectedCustomer}>Proceed to Delivery</button>
+      <div className="text-center mt-4">
+        <button className="btn btn-primary" onClick={handleNavigateToDelivery}>Go to Delivery Page</button>
       </div>
     </div>
   );

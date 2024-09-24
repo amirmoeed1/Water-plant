@@ -1,11 +1,120 @@
+
+
+
 const express = require('express');
 const app = express.Router();
 const Town = require('./model/town');
 const Customer = require('./model/coustomer');
 const Bottle = require('./model/bottles');
- 
+// const Bottlemonthly = require('./model/bottlemonthly');
 const Payment = require('./model/payments');
- 
+// const town = require('./model/town');
+// const Login = require('./model/payment');
+
+
+
+// // Get all towns
+// app.get('/towns', async (req, res) => {
+//   try {
+//     const towns = await Town.find();
+//     res.json(towns);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// });
+
+// // Add a new town
+// app.post('/towns', async (req, res) => {
+//   const town = new Town({
+//     name: req.body.town,
+//   });
+
+//   try {
+//     const newTown = await town.save();
+//     res.status(201).json(newTown);
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// });
+
+// Get all customers for a specific town
+app.get('/customers', async (req, res) => {
+  const townId = req.query.townId;
+  try {
+    const customers = await Customer.find({ town: townId });
+    res.json(customers);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+// Get all customers  
+app.get('/allCustomers', async (req, res) => {
+  try {
+    // Fetch all customers without filtering by townId
+    const customers = await Customer.find(); // This will return all customers
+    res.json(customers);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+// // Add a new customer
+// app.post('/customers', async (req, res) => {
+//   const customer = new Customer({
+//     name: req.body.customer,
+//     town: req.body.town,
+//   });
+
+//   try {
+//     const newCustomer = await customer.save();
+//     res.status(201).json(newCustomer);
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// });
+
+// // Add a bottle to a customer
+// app.post('/bottles', async (req, res) => {
+//   const bottle = new Bottle({
+//     type: req.body.type,
+//     qty: req.body.qty,
+//     pricePerBottle: req.body.pricePerBottle,
+//     customerId: req.body.customerId,
+//   });
+
+//   try {
+//     const newBottle = await bottle.save();
+//     res.status(201).json(newBottle);
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// });
+// Login route
+// app.post('/login', async (req, res) => {
+//   const { username, password } = req.body;
+
+//   try {
+//     // Check if the user exists
+//     const user = await User.findOne({ username });
+//     if (!user) {
+//       return res.status(400).json({ success: false, message: 'Invalid username or password' });
+//     }
+
+//     // Compare the entered password with the hashed password in the database
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) {
+//       return res.status(400).json({ success: false, message: 'Invalid username or password' });
+//     }
+
+//     // Create a token that expires in 1 week
+//     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1w' });
+
+//     // Return the token
+//     res.json({ success: true, token });
+//   } catch (error) {
+//     console.error('Error during login:', error);
+//     res.status(500).json({ success: false, message: 'Server error' });
+//   }
+// });
 const users = [
     { username: 'admin', password: '12345' } // Example user
   ];
@@ -193,7 +302,8 @@ app.post('/customers', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-})
+});
+// Fetch Customer by ID
 // app.get('/customers/:Id', async (req, res) => {
 //   try {
 //     console.log("coustomer id ", req.params.Id)
@@ -279,6 +389,7 @@ app.delete('/customers/:customerId', async (req, res) => {
   }
 });
 
+// Add a new bottle entry
 // app.post('/bottles', async (req, res) => {
 //   const { type, qty, pricePerBottle, customerId } = req.body;
 
@@ -451,7 +562,31 @@ app.get('/daily-data', async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 });
- 
+// Update town by ID
+// app.put('/towns/:id', async (req, res) => {
+//   const { id } = req.params;
+//   const { town } = req.body;
+
+//   try {
+//     // Find town by ID and update it
+//     const updatedTown = await Town.findByIdAndUpdate(
+//       id,
+//       { town }, // Update the town field
+//       { new: true, runValidators: true } // Return the updated document
+//     );
+
+//     if (!updatedTown) {
+//       return res.status(404).json({ message: 'Town not found' });
+//     }
+
+//     res.json(updatedTown);
+//   } catch (error) {
+//     console.error('Error updating town:', error);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
+
+// Delete town and associated customers
 app.delete('/towns/:id', async (req, res) => {
   try {
     const townId = req.params.id;
