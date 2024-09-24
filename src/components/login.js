@@ -3,6 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+// Replace this with your Vercel backend URL
+const API_BASE_URL = 'https://water-plant-five.vercel.app/';
+
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -10,10 +13,9 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/login', { username, password });
-      
+      const response = await axios.post(`${API_BASE_URL}/api/login`, { username, password });
+
       if (response.data.success) {
-        // Store token and expiration time in localStorage
         localStorage.setItem('authToken', response.data.token);
         localStorage.setItem('tokenExpiry', new Date().getTime() + 604800000); // 1 week in milliseconds
         alert('Login successful');
@@ -22,13 +24,7 @@ const Login = () => {
         alert('Invalid credentials');
       }
     } catch (error) {
-      if (error.response) {
-        console.error('Error response from server:', error.response.data);
-      } else if (error.request) {
-        console.error('No response received:', error.request);
-      } else {
-        console.error('Error during login:', error.message);
-      }
+      console.error('Error during login:', error.message);
       alert('An error occurred during login');
     }
   };
@@ -64,7 +60,3 @@ const Login = () => {
 };
 
 export default Login;
-
-
- 
-
