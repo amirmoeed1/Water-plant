@@ -18,6 +18,9 @@ app.use(bodyParser.json());
 connectToDatabase();
 // Start server
 const port = 5000;
+app.get("/",(req, res)=>{
+  res.json({masseg: "Hello world for backend"})
+});
 
 app.use("/", authRoutes)
 app.use("/", customerRoutes)

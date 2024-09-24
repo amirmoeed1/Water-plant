@@ -54,9 +54,9 @@ app.use(cors());
 //     res.status(500).json({ message: error.message });
 //   }
 // });
-// const users = [
-//     { username: 'admin', password: '12345' } // Example user
-//   ];
+const users = [
+    { username: 'admin', password: '12345' } // Example user
+  ];
   
 //   app.post('/login', (req, res) => {
 //     console.log('Login attempt:', req.body); // Log the login attempt
@@ -743,14 +743,14 @@ app.use(cors());
 // });
 
 // Delete a payment
-app.delete('/payment/:id', async (req, res) => {
-  try {
-    await Payment.findByIdAndDelete(req.params.id);
-    res.status(204).end();
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+// app.delete('/payment/:id', async (req, res) => {
+//   try {
+//     await Payment.findByIdAndDelete(req.params.id);
+//     res.status(204).end();
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// });
 
 module.exports = {
     login,app
