@@ -22,7 +22,6 @@ const Payment = require('./model/payments');
 //     res.status(500).json({ message: error.message });
 //   }
 // });
-
 // // Add a new town
 // app.post('/towns', async (req, res) => {
 //   const town = new Town({
