@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const users = [
-  { username: 'admin', password: '12345' } // Example user
-];
+// const users = [
+//   { username: 'admin', password: '12345' } // Example user
+// ];
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
