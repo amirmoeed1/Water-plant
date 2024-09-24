@@ -3,20 +3,19 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// API base URL
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://water-plant-five.vercel.app/' // Replace this with your live backend URL
-  : 'http://localhost:5000'; // Local server for development
-
+const users = [
+  { username: 'admin', password: '12345' } // Example user
+];
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/login`, { username, password });
-
+      const response = await axios.post('http://localhost:5000/login', { username, password });
+      
       if (response.data.success) {
         // Store token and expiration time in localStorage
         localStorage.setItem('authToken', response.data.token);
@@ -69,3 +68,7 @@ const Login = () => {
 };
 
 export default Login;
+
+
+ 
+

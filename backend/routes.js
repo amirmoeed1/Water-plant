@@ -119,21 +119,14 @@ const users = [
     { username: 'admin', password: '12345' } // Example user
   ];
   
-  // app.post('/login', (req, res) => {
-  //   const { username, password } = req.body;
   app.post('/login', (req, res) => {
     const { username, password } = req.body;
   
     const user = users.find(u => u.username === username && u.password === password);
     if (user) {
-      // Token generation logic (in real case, use JWT)
-      const token = 'dummyToken123'; // You can replace this with a JWT or another token mechanism
-  
-      // Return success response with token
-      res.json({ success: true, message: 'Login successful', token });
+      res.json({ success: true, message: 'Login successful' });
     } else {
-      // Return error response if credentials are invalid
-      res.status(401).json({ success: false, message: 'Invalid credentials' });
+      res.json({ success: false, message: 'Invalid credentials' });
     }
   });
   
