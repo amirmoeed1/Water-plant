@@ -1,5 +1,5 @@
 const Router = require("express");
-const { getBills } = require("../Controller/bills");
+const { getBills } = require("../api/bills");
 
 const billsRouts = Router();
 

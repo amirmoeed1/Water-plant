@@ -1,10 +1,8 @@
 const express = require('express');
 const app = express.Router();
-const Town = require('../model/town.js');
-const Customer = require('../model/coustomer.js');
-const Bottle = require('../model/bottles');
-const Bottlemonthly = require('../model/bottlemonthly');
-const Payment = require('../model/payments');
+const mongoose = require('mongoose');
+
+ 
 const Login = require('../model/login.js');
 const cors = require('cors');
 app.use(cors());
@@ -54,6 +52,8 @@ app.use(cors());
 //     res.status(500).json({ message: error.message });
 //   }
 // });
+
+ 
 const users = [
     { username: 'admin', password: '12345' } // Example user
   ];

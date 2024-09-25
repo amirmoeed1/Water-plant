@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
-const Login = require('./api/login.js');
+// const Login = require('./api/login.js');
+
 const {authRoutes} = require('./routes/userRoutes.js')
 const {customerRoutes} = require('./routes/customer.js')
 const {townRoutes} = require('./routes/town.js')
@@ -20,13 +21,15 @@ connectToDatabase();
 const port = 5000;
 app.get("/",(req, res)=>{
   res.json({masseg: "Hello world for backend"})
-});
+});''
 
 app.use("/", authRoutes)
 app.use("/", customerRoutes)
 app.use("/", townRoutes)
 app.use("/", bottlesRoutes)
 app.use("/", paymetRoutes)
+
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
