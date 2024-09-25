@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
 });
 
 // Anything that doesn't match the API routes above, send back the React app
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/build', 'server.js'));
 });
 
