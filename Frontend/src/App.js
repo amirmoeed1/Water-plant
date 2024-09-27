@@ -12,7 +12,7 @@ import TownCustomersList from './components/customerdata';
  
  
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
-
+// import '../styles/globals.css'; // Your custom styles, if any
 function App() {
   return (
     <Router>
