@@ -26,11 +26,11 @@ connectToDatabase();
 
 // Start server
 const port = 5000;
-app.use("/auth", authRoutes)
-app.use("/customer", customerRoutes)
-app.use("/townrates", townRoutes)
-app.use("/bottlesRoutes", bottlesRoutes)
-app.use("/paymetRoutes", paymetRoutes)
+app.use("/", authRoutes)
+app.use("/", customerRoutes)
+app.use("/", townRoutes)
+app.use("/", bottlesRoutes)
+app.use("/", paymetRoutes)
 
 
 app.listen(port, () => {
