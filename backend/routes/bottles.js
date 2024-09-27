@@ -1,5 +1,5 @@
 const Router = require("express");
-const { addBottles,GetBottles,getBottleByCustomerId,DeleteBottle,updateBottle,GetDailyData } = require("../api/bottles");
+const { addBottles,GetBottles,getBottleByCustomerId,DeleteBottle,updateBottle,GetDailyData } = require("../controller/bottles");
 
 const bottlesRoutes = Router();
 

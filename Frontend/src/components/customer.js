@@ -41,6 +41,7 @@ const Payment = () => {
     const fetchTowns = async () => {
       try {
         const response = await axios.get('http://localhost:5000/towns');
+        // const response = await axios.get('api/townrates/towns?type=get-towns');
         setTowns(response.data);
       } catch (error) {
         console.error('Error fetching towns:', error);

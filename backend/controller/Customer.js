@@ -2,6 +2,7 @@ const coustomer = require("../model/coustomer");
 
 // Find customer by TownId
 
+
 const customer = async (req, res) => {
   const townId = req.query.townId;
   try {
@@ -20,24 +21,6 @@ const allCustomer = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-// Get Customer  by town Id
-// const getCustomerTownId = async(req,res)=>{
-//     try {
-//         const { town } = req.query;
-//         if (!town) {
-//           return res.status(400).json({ message: 'Town ID is required' });
-//         }
-//         const customers = await Customer.find({ town });
-//         if (customers.length === 0) {
-//           return res.status(404).json({ message: 'No customers found for this town' });
-//         }
-//         res.json(customers);
-//       } catch (error) {
-//         res.status(500).json({ message: error.message });
-//       }
-// }
-//
 // Find Customer By Id
 const customerId = async (req, res) => {
   const { Id } = req.params; // Access route parameter

@@ -1,5 +1,5 @@
 const Router = require("express");
-const { addPayment,getAllPayments,getPaymetByCustomerID,paymetnDate,UpdatePaymet,DeletePayment } = require("../api/payment");
+const { addPayment,getAllPayments,getPaymetByCustomerID,paymetnDate,UpdatePaymet,DeletePayment } = require("../controller/payment");
 
 const paymetRoutes = Router();
 

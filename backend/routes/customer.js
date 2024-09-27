@@ -1,5 +1,5 @@
 const Router = require('express');
-const {customer,allCustomer,customerId,addCustomers,UpdateCustomer,monthalyReport,deleteCustomer,totalCustomer} = require('../api/Customer');
+const {customer,allCustomer,customerId,addCustomers,UpdateCustomer,monthalyReport,deleteCustomer,totalCustomer} = require('../controller/Customer');
 
 
  const customerRoutes = Router()
