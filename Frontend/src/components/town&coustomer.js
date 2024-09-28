@@ -72,17 +72,17 @@ const response = await axios.get(`https://water-plant-backend.onrender.com/custo
       return;
     }
 
-    try {
-      if (editCustomer) {
-      await axios.put(`https://water-plant-backend.onrender.com/customers/${editCustomer._id}`)
-, {
-          customer: newCustomer,
-          phone: newPhone,
-          address: newAddress,
-          quantity: newQuantity,
-        });
-        setEditCustomer(null);
-      } else {
+   try {
+  if (editCustomer) {
+    await axios.put(`https://water-plant-backend.onrender.com/customers/${editCustomer._id}`, {
+      customer: newCustomer,
+      phone: newPhone,
+      address: newAddress,
+      quantity: newQuantity,
+    });
+    setEditCustomer(null);
+  }
+}else {
         await axios.post('https://water-plant-backend.onrender.com/customers', {
           customer: newCustomer,
           town: selectedTown,
