@@ -27,7 +27,7 @@ const TownCustomerManagement = () => {
 
   const fetchTowns = async () => {
     try {
-      const response = await axios.get('https://water-plant-backend.onrender.com');
+      const response = await axios.get('https://water-plant-backend.onrender.comh/towns');
       setTowns(response.data);
     } catch (error) {
       alert('Error fetching towns: ' + error.message);
@@ -37,7 +37,7 @@ const TownCustomerManagement = () => {
   const fetchCustomers = async (townId) => {
     try {
       if (!townId) return;
-      const response = await axios.get(`https://water-plant-backend.onrender.com`);
+      const response = await axios.get(`https://water-plant-backend.onrender.com/customers?townId=${townId}`);
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error.message);
@@ -51,7 +51,7 @@ const TownCustomerManagement = () => {
     }
 
     try {
-      await axios.post('https://water-plant-backend.onrender.com', { newtown: newTown });
+      await axios.post('https://water-plant-backend.onrender.com/towns', { newtown: newTown });
       setNewTown('');
       fetchTowns();
     } catch (error) {
@@ -73,7 +73,7 @@ const TownCustomerManagement = () => {
 
     try {
       if (editCustomer) {
-        await axios.put(`https://water-plant-backend.onrender.com`, {
+        await axios.put(`https://water-plant-backend.onrender.com/${editCustomer._id}`, {
           customer: newCustomer,
           phone: newPhone,
           address: newAddress,
@@ -81,7 +81,7 @@ const TownCustomerManagement = () => {
         });
         setEditCustomer(null);
       } else {
-        await axios.post('https://water-plant-backend.onrender.com', {
+        await axios.post('https://water-plant-backend.onrender.com/customers', {
           customer: newCustomer,
           town: selectedTown,
           phone: newPhone,
@@ -117,7 +117,7 @@ const TownCustomerManagement = () => {
   const handleDeleteTown = async (townId) => {
     if (window.confirm('Are you sure you want to delete this town?')) {
       try {
-        await axios.delete(`https://water-plant-backend.onrender.com`);
+        await axios.delete(`https://water-plant-backend.onrender.com/towns/${townId}`);
         fetchTowns();
       } catch (error) {
         alert('Error deleting town: ' + error.message);
@@ -128,7 +128,7 @@ const TownCustomerManagement = () => {
   const handleDeleteCustomer = async (customerId) => {
     if (window.confirm('Are you sure you want to delete this customer?')) {
       try {
-        await axios.delete(`https://water-plant-backend.onrender.com`);
+        await axios.delete(`https://water-plant-backend.onrender.com/customers/${customerId}`);
         fetchCustomers(selectedTown);
       } catch (error) {
         alert('Error deleting customer: ' + error.message);
