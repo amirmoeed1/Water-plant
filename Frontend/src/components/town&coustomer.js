@@ -74,7 +74,7 @@ const response = await axios.get(`https://water-plant-backend.onrender.com/custo
 
     try {
       if (editCustomer) {
-      await axios.put(`https://water-plant-backend.onrender.com/customers/${editCustomer._id}`);
+      await axios.put(`https://water-plant-backend.onrender.com/customers/${editCustomer._id}`)
 , {
           customer: newCustomer,
           phone: newPhone,
