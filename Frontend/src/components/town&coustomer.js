@@ -4,7 +4,7 @@ import axios from 'axios';
 import './TownCustomerManagement.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const TownCustomerManagement = () => {
+export default const TownCustomerManagement = () => {
   const [towns, setTowns] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [newTown, setNewTown] = useState('');
@@ -355,4 +355,4 @@ try {
   );
 };
 
-export default TownCustomerManagement;
+
