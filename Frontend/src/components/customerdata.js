@@ -12,7 +12,7 @@ const TownCustomerForm = () => {
   useEffect(() => {
     const fetchTowns = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/towns');
+        const response = await axios.get('https://water-plant-backend.onrender.com');
         console.log('Fetched towns:', response.data); // Debugging line
         setTowns(response.data); // Assuming the response is an array of towns
       } catch (error) {
@@ -29,7 +29,7 @@ const TownCustomerForm = () => {
     setSelectedCustomer(null); // Reset customer when town changes
 
     try {
-      const response = await axios.get(`http://localhost:5000/customers?townId=${townId}`);
+      const response = await axios.get(`https://water-plant-backend.onrender.com`);
       console.log('Fetched customers:', response.data); // Debugging line
       setCustomers(response.data); // Assuming the response is an array of customers
     } catch (error) {
