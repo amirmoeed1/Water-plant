@@ -12,6 +12,16 @@ const customer = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// payment customer
+const customer = async (req, res) => {
+  const townId = req.query.townId;
+  try {
+    const customer = await coustomer.find({ town: townId });
+    res.json(customer);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 // Get all Customers
 const allCustomer = async (req, res) => {
   try {
