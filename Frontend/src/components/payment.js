@@ -76,7 +76,7 @@ const Payment = () => {
 
   const fetchCustomers = async (townId) => {
     try {
-      const response = await axios.get('https://water-plant-backend.onrender.com/customer?townId=${townId}');
+      const response = await axios.get('https://water-plant-backend.onrender.com/customer?townId');
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
