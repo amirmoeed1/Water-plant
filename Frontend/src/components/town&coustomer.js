@@ -128,7 +128,7 @@ const TownCustomerManagement = () => {
   const handleDeleteCustomer = async () => {
   if (selectedCustomer && window.confirm('Are you sure you want to delete this customer?')) {
     try {
-      await axios.delete(`https://water-plant-backend.onrender.com/customers/${selectedCustomer}`);
+      await axios.delete(`https://water-plant-backend.onrender.com/customers?$customerId`);
       fetchCustomers(selectedTown); // Refresh customers list after deletion
       setSelectedCustomer(''); // Reset the selected customer
     } catch (error) {
