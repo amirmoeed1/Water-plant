@@ -72,35 +72,34 @@ const response = await axios.get(`https://water-plant-backend.onrender.com/custo
       return;
     }
 
-   try {
-if (editCustomer) {
-  await axios.put(`https://water-plant-backend.onrender.com/customers/${editCustomer._id}`, {
-    customer: newCustomer,
-    phone: newPhone,
-    address: newAddress,
-    quantity: newQuantity,
-  });
-  setEditCustomer(null);
-} else {
-  await axios.post('https://water-plant-backend.onrender.com/customers', {
-    customer: newCustomer,
-    town: selectedTown,
-    phone: newPhone,
-    address: newAddress,
-    quantity: Number(newQuantity),
-  });
+try {
+  if (editCustomer) {
+    await axios.put(`https://water-plant-backend.onrender.com/customers/${editCustomer._id}`, {
+      customer: newCustomer,
+      phone: newPhone,
+      address: newAddress,
+      quantity: newQuantity,
+    });
+    setEditCustomer(null);
+  } else {
+    await axios.post('https://water-plant-backend.onrender.com/customers', {
+      customer: newCustomer,
+      town: selectedTown,
+      phone: newPhone,
+      address: newAddress,
+      quantity: Number(newQuantity),
+    });
+  }
+  setNewCustomer('');
+  setNewPhone('');
+  setNewAddress('');
+  setNewQuantity('');
+  fetchCustomers(selectedTown);
+} catch (error) {
+  console.error('Error adding/updating customer:', error.message);
+  alert('Error adding/updating customer: ' + error.message);
 }
 
-
-      setNewCustomer('');
-      setNewPhone('');
-      setNewAddress('');
-      setNewQuantity('');
-      fetchCustomers(selectedTown);
-    } catch (error) {
-      console.error('Error adding/updating customer:', error.message);
-    }
-  };
 
   const handleTownChange = (e) => {
     const townId = e.target.value;
