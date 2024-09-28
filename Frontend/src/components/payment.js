@@ -97,7 +97,7 @@ const Payment = () => {
     if (customerId) {
       AllBottles(customerId);
       try {
-        const response = await axios.get("https://water-plant-backend.onrender.com/customer?customerId=${customerId}");
+        const response = await axios.get('https://water-plant-backend.onrender.com/customer?customerId=${customerId}');
         setCustomerDetails(response.data);
         // Reset quantities
         setQuantities({
