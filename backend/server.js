@@ -26,7 +26,7 @@ connectToDatabase();
 
 // Start server
 const port = 5000;
-app.use("/", authRoutes)
+app.use("/login", authRoutes)
 app.use("/", customerRoutes)
 app.use("/", townRoutes)
 app.use("/", bottlesRoutes)
