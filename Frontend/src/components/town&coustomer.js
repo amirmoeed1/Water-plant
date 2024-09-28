@@ -125,16 +125,20 @@ const TownCustomerManagement = () => {
     }
   };
 
-  const handleDeleteCustomer = async (customerId) => {
-    if (window.confirm('Are you sure you want to delete this customer?')) {
-      try {
-        await axios.delete(`https://water-plant-backend.onrender.com/customers/${customerId}`);
-        fetchCustomers(selectedTown);
-      } catch (error) {
-        alert('Error deleting customer: ' + error.message);
-      }
+  const handleDeleteCustomer = async () => {
+  if (selectedCustomer && window.confirm('Are you sure you want to delete this customer?')) {
+    try {
+      await axios.delete(`https://water-plant-backend.onrender.com/customers/${selectedCustomer}`);
+      fetchCustomers(selectedTown); // Refresh customers list after deletion
+      setSelectedCustomer(''); // Reset the selected customer
+    } catch (error) {
+      alert('Error deleting customer: ' + error.message);
     }
-  };
+  } else {
+    alert('Please select a customer to delete');
+  }
+};
+
 
   const filteredTowns = towns.filter(town =>
     town?.town.toLowerCase().includes(townSearch.toLowerCase())
@@ -337,9 +341,10 @@ const TownCustomerManagement = () => {
             </select>
           </div>
 
-          {selectedCustomer && (
-            <button className="btn btn-danger" onClick={() => handleDeleteCustomer(selectedCustomer)}>Delete Customer</button>
-          )}
+         {selectedCustomer && (
+  <button className="btn btn-danger" onClick={handleDeleteCustomer}>Delete Customer</button>
+)}
+
         </div>
       </div>
 
