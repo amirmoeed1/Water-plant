@@ -51,7 +51,7 @@ const TownCustomerManagement = () => {
     }
 
     try {
-      await axios.post('http://localhost:5000/towns', { newtown: newTown });
+      await axios.post('https://water-plant-backend.onrender.com', { newtown: newTown });
       setNewTown('');
       fetchTowns();
     } catch (error) {
