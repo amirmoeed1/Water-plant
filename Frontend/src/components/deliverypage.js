@@ -31,7 +31,7 @@ const Delivery = () => {
   const fetchCustomer = async () => {
     try {
       if (!customerId) throw new Error('Customer ID is missing');
-      const response = await axios.get(`http://localhost:5000/customer/${customerId}`);
+      const response = await axios.get(`https://water-plant-backend.onrender.com`);
       setCustomer(response.data);
       
       // Set empty bottles based on the quantity from customer data
@@ -44,7 +44,7 @@ const Delivery = () => {
 
   const fetchBottles = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/bottles/${customerId}`);
+      const response = await axios.get(`https://water-plant-backend.onrender.com`);
       setBottles(response.data);
     } catch (error) {
       console.error('Error fetching bottles:', error.response || error.message);
@@ -53,7 +53,7 @@ const Delivery = () => {
 
   const fetchPayments = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/paymentcustomer/${customerId}`);
+      const response = await axios.get(`https://water-plant-backend.onrender.com`);
       setPayments(response.data);
     } catch (error) {
       console.error('Error fetching payments:', error.response || error.message);
@@ -70,7 +70,7 @@ const Delivery = () => {
       const totalAmount = parseInt(bottleQty) * parseFloat(pricePerBottle);
 
       if (editBottle) {
-        await axios.put(`http://localhost:5000/bottles/${editBottle._id}`, {
+        await axios.put(`https://water-plant-backend.onrender.com`, {
           type: bottleType,
           qty: parseInt(bottleQty),
           pricePerBottle: parseFloat(pricePerBottle),
@@ -80,7 +80,7 @@ const Delivery = () => {
         });
         setEditBottle(null);
       } else {
-        await axios.post('http://localhost:5000/bottles', {
+        await axios.post('https://water-plant-backend.onrender.com', {
           type: bottleType,
           qty: parseInt(bottleQty),
           pricePerBottle: parseFloat(pricePerBottle),
@@ -101,33 +101,12 @@ const Delivery = () => {
 
   const handleDeleteBottle = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/bottles/${id}`);
+      await axios.delete(`https://water-plant-backend.onrender.com`);
       fetchBottles();
     } catch (error) {
       console.error('Error deleting bottle:', error.response || error.message);
     }
   };
-
-  // const handlePayment = async () => {
-  //   if (!paymentAmount || isNaN(paymentAmount) || parseFloat(paymentAmount) <= 0) {
-  //     alert('Please enter a valid payment amount');
-  //     return;
-  //   }
-  //   try {
-  //     const paymentDate = new Date().toISOString();
-  //     await axios.post('http://localhost:5000/payments', {
-  //       customerId,
-  //       paymentAmount: parseFloat(paymentAmount),
-  //       date: paymentDate
-  //     });
-  //     await fetchCustomer();
-  //     await fetchBottles();
-  //     await fetchPayments();
-  //     setPaymentAmount('');
-  //   } catch (error) {
-  //     console.error('Error recording payment:', error.response || error.message);
-  //   }
-  // };
 
   const calculateTotalAmount = () => {
     return bottles.reduce((total, bottle) => total + (bottle.totalAmount || 0), 0);
