@@ -27,7 +27,7 @@ const TownCustomerManagement = () => {
 
   const fetchTowns = async () => {
     try {
-      const response = await axios.get('https://water-plant-backend.onrender.comh/towns');
+      const response = await axios.get('https://water-plant-backend.onrender.com/towns');
       setTowns(response.data);
     } catch (error) {
       alert('Error fetching towns: ' + error.message);
