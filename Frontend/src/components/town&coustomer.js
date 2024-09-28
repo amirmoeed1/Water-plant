@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+Iimport React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './TownCustomerManagement.css';
@@ -117,7 +117,7 @@ const TownCustomerManagement = () => {
   const handleDeleteTown = async (townId) => {
     if (window.confirm('Are you sure you want to delete this town?')) {
       try {
-        await axios.delete(`https://water-plant-backend.onrender.com}`);
+        await axios.delete(`https://water-plant-backend.onrender.com`);
         fetchTowns();
       } catch (error) {
         alert('Error deleting town: ' + error.message);
