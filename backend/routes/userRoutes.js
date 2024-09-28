@@ -4,7 +4,7 @@ const {login} = require('../controller/user');
 
  const authRoutes = Router()
 
-authRoutes.post("/login", login)
+authRoutes.post("/", login)
 
 
 module.exports = {
