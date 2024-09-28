@@ -4,7 +4,7 @@ import axios from 'axios';
 import './TownCustomerManagement.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default const TownCustomerManagement = () => {
+const TownCustomerManagement = () => {
   const [towns, setTowns] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [newTown, setNewTown] = useState('');
@@ -37,8 +37,7 @@ export default const TownCustomerManagement = () => {
   const fetchCustomers = async (townId) => {
     try {
       if (!townId) return;
-const response = await axios.get(`https://water-plant-backend.onrender.com/customers?townId=${townId}`);
-
+      const response = await axios.get(`https://water-plant-backend.onrender.com/customers?townId=${townId}`);
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error.message);
@@ -72,34 +71,34 @@ const response = await axios.get(`https://water-plant-backend.onrender.com/custo
       return;
     }
 
-try {
-  if (editCustomer) {
-    await axios.put(`https://water-plant-backend.onrender.com/customers/${editCustomer._id}`, {
-      customer: newCustomer,
-      phone: newPhone,
-      address: newAddress,
-      quantity: newQuantity,
-    });
-    setEditCustomer(null);
-  } else {
-    await axios.post('https://water-plant-backend.onrender.com/customers', {
-      customer: newCustomer,
-      town: selectedTown,
-      phone: newPhone,
-      address: newAddress,
-      quantity: Number(newQuantity),
-    });
-  }
-  setNewCustomer('');
-  setNewPhone('');
-  setNewAddress('');
-  setNewQuantity('');
-  fetchCustomers(selectedTown);
-} catch (error) {
-  console.error('Error adding/updating customer:', error.message);
-  alert('Error adding/updating customer: ' + error.message);
-}
-
+    try {
+      if (editCustomer) {
+        await axios.put(`https://water-plant-backend.onrender.com/customers/${editCustomer._id}`, {
+          customer: newCustomer,
+          phone: newPhone,
+          address: newAddress,
+          quantity: newQuantity,
+        });
+        setEditCustomer(null);
+      } else {
+        await axios.post('https://water-plant-backend.onrender.com/customers', {
+          customer: newCustomer,
+          town: selectedTown,
+          phone: newPhone,
+          address: newAddress,
+          quantity: Number(newQuantity),
+        });
+      }
+      setNewCustomer('');
+      setNewPhone('');
+      setNewAddress('');
+      setNewQuantity('');
+      fetchCustomers(selectedTown);
+    } catch (error) {
+      console.error('Error adding/updating customer:', error.message);
+      alert('Error adding/updating customer: ' + error.message);
+    }
+  };
 
   const handleTownChange = (e) => {
     const townId = e.target.value;
@@ -118,8 +117,7 @@ try {
   const handleDeleteTown = async (townId) => {
     if (window.confirm('Are you sure you want to delete this town?')) {
       try {
-      await axios.delete(`https://water-plant-backend.onrender.com/towns/${townId}`);
-
+        await axios.delete(`https://water-plant-backend.onrender.com/towns/${townId}`);
         fetchTowns();
       } catch (error) {
         alert('Error deleting town: ' + error.message);
@@ -130,7 +128,7 @@ try {
   const handleDeleteCustomer = async (customerId) => {
     if (window.confirm('Are you sure you want to delete this customer?')) {
       try {
-        await axios.delete('https://water-plant-backend.onrender.com/customers/${customerId}');
+        await axios.delete(`https://water-plant-backend.onrender.com/customers/${customerId}`);
         fetchCustomers(selectedTown);
       } catch (error) {
         alert('Error deleting customer: ' + error.message);
@@ -176,16 +174,14 @@ try {
     }
   };
 
-  // Show town suggestions when typing
   const handleTownInputChange = (e) => {
     setTownSearch(e.target.value);
-    setShowTownSuggestions(true); // Show the suggestions dropdown
+    setShowTownSuggestions(true);
   };
 
-  // Show customer suggestions when typing
   const handleCustomerInputChange = (e) => {
     setCustomerSearch(e.target.value);
-    setShowCustomerSuggestions(true); // Show the suggestions dropdown
+    setShowCustomerSuggestions(true);
   };
 
   const handleTownSuggestionClick = (town) => {
@@ -200,7 +196,6 @@ try {
     setCustomerSearch('');
     setShowCustomerSuggestions(false);
   };
-
   return (
     <div className='container'>
       <div className='text-center mt-5 mb-4'>
@@ -354,5 +349,5 @@ try {
     </div>
   );
 };
-
+export default TownCustomerManagement;
 
