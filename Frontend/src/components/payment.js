@@ -67,7 +67,7 @@ const Payment = () => {
 
   const AllBottles = async (id) => {
     try {
-      const response = await axios.get("https://water-plant-backend.onrender.com/bottles/${id}");
+      const response = await axios.get('https://water-plant-backend.onrender.com/bottles?id=${id}');
       setAllBottles(response.data);
     } catch (error) {
       console.error('Error fetching bottles:', error);
@@ -97,7 +97,7 @@ const Payment = () => {
     if (customerId) {
       AllBottles(customerId);
       try {
-        const response = await axios.get("https://water-plant-backend.onrender.com/customer/${customerId}");
+        const response = await axios.get("https://water-plant-backend.onrender.com/customer?customerId=${customerId}");
         setCustomerDetails(response.data);
         // Reset quantities
         setQuantities({
