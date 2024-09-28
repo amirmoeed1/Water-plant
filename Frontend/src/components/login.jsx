@@ -15,7 +15,7 @@ const Login = () => {
   const handleLogin = async () => {
     console.log('Logging in with', { username, password }); // Log the credentials
     try {
-        const response = await axios.post("https://water-plant-backend.onrender.com", { username, password });
+        const response = await axios.post("https://water-plant-backend.onrender.com/login", { username, password });
 
         if (response.data.success) {
             localStorage.setItem('authToken', response.data.token);
