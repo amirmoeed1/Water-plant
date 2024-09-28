@@ -4,6 +4,7 @@ const {customer,allCustomer,customerId,addCustomers,UpdateCustomer,monthalyRepor
 
  const customerRoutes = Router()
  customerRoutes.get("/customers", customer)
+customerRoutes.get("/customer", paymentcustomer)
  customerRoutes.get("/allCustomers", allCustomer)
  customerRoutes.get("/customer/:Id", customerId)
  customerRoutes.post("/customers", addCustomers)
