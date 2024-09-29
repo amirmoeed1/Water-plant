@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -246,6 +247,7 @@ const TownCustomerManagement = () => {
               onChange={handleTownInputChange}
               onKeyPress={handleTownSearchKeyPress}
             />
+            
             {showTownSuggestions && (
               <ul className="list-group position-absolute mt-5 suggestion-dropdown">
                 {filteredTowns.map((town) => (
@@ -256,9 +258,12 @@ const TownCustomerManagement = () => {
                   >
                     {town?.town}
                   </li>
+                  
                 ))}
               </ul>
+              
             )}
+            
             <select className="form-select" onChange={handleTownChange} value={selectedTown}>
               <option value="">Select a Town</option>
               {filteredTowns.map((town) => (
@@ -268,7 +273,10 @@ const TownCustomerManagement = () => {
               ))}
             </select>
           </div>
-
+            <button className="btn col-md-8 ms-4 btn-danger" onClick={handleDeleteCustomer} disabled={!selectedCustomer}>
+            Delete Customer
+          </button>
+          </div>
           <h4>Add Customer</h4>
                 <div ClassName="row">
           <div className="input-group col-md-6 mb-3">
@@ -308,18 +316,18 @@ const TownCustomerManagement = () => {
             />
                 </div>
                 </div>
-            <button className="btn btn-primary" onClick={handleAddCustomer}>{editCustomer ? 'Update Customer' : 'Add Customer'}</button>
-          </div>
+            <button className="btn col-md-10 mt-3 mb-4 btn-primary" onClick={handleAddCustomer}>{editCustomer ? 'Update Customer' : 'Add Customer'}</button>
 
-          <button className="btn btn-warning" onClick={handleEditCustomer} disabled={!selectedCustomer}>
+          <button className="btn col-md-5  btn-warning" onClick={handleEditCustomer} disabled={!selectedCustomer}>
             Edit Customer
           </button>
-          <button className="btn btn-danger" onClick={handleDeleteCustomer} disabled={!selectedCustomer}>
+          <button className="btn col-md-5 ms-4 btn-danger" onClick={handleDeleteCustomer} disabled={!selectedCustomer}>
             Delete Customer
           </button>
-
+         
+<div className='row'>
           <h4 className='mt-4'>Select a Customer</h4>
-          <div className="input-group mb-3">
+          <div className="input-group col-md-3 mb-3">
             <input
               type="text"
               className="form-control"
@@ -351,13 +359,14 @@ const TownCustomerManagement = () => {
             </select>
           </div>
 
-          <button className="btn btn-secondary" onClick={handleNavigateToDelivery} disabled={!selectedCustomer}>
-            Navigate to Delivery
+          <button className="btn btn-secondary " onClick={handleNavigateToDelivery} disabled={!selectedCustomer}>
+           Go to Delivery Page
           </button>
         </div>
       </div>
-    </div>
+      </div>
+    
   );
 };
 
-export default TownCustomerManagement;
+export default TownCustomerManagement
