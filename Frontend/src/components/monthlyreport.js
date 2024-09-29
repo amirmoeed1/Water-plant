@@ -75,7 +75,7 @@ const Report = () => {
   // Fetch all towns
   const fetchTowns = async () => {
     try {
-      const response = await axios.get("https://water-plant-backend.onrender.com");
+      const response = await axios.get('https://water-plant-backend.onrender.com/towns');
       setTowns(response.data);
     } catch (error) {
       console.error("Error fetching towns:", error);
@@ -84,7 +84,7 @@ const Report = () => {
   // Fetch all customer
   const fetchAllCustomer = async () => {
     try {
-      const response = await axios.get("https://water-plant-backend.onrender.com");
+      const response = await axios.get('https://water-plant-backend.onrender.com/allCustomers');
       setAllCustomers(response.data);
     } catch (error) {
       console.error("Error fetching towns:", error);
@@ -94,7 +94,7 @@ const Report = () => {
   // Fetch data for a single town
   const fetchSingleTownData = async (townId) => {
     try {
-      const response = await axios.get(`https://water-plant-backend.onrender.com`); // API endpoint to get a single town's data
+      const response = await axios.get(`https://water-plant-backend.onrender.com/towns/${townId}`); // API endpoint to get a single town's data
       // setTownData(response.data); // Save the town data
       console.log("res....", response);
     } catch (error) {
@@ -105,7 +105,7 @@ const Report = () => {
   // Fetch all bottles
   const fetchAllBottles = async () => {
     try {
-      const response = await axios.get("https://water-plant-backend.onrender.com");
+      const response = await axios.get('https://water-plant-backend.onrender.com/bottles');
       setAllBottles(response.data);
     } catch (error) {
       console.error("Error fetching bottles:", error);
@@ -115,7 +115,7 @@ const Report = () => {
   // Fetch all payments
   const fetchAllPayments = async () => {
     try {
-      const response = await axios.get("https://water-plant-backend.onrender.com");
+      const response = await axios.get('https://water-plant-backend.onrender.com/payment');
       setAllPayments(response.data);
     } catch (error) {
       console.error("Error fetching payments:", error);
@@ -126,7 +126,7 @@ const Report = () => {
   const fetchCustomers = async (townId) => {
     try {
       const response = await axios.get(
-        `https://water-plant-backend.onrender.com`
+        `https://water-plant-backend.onrender.com/customers/${townId}`
       );
       setCustomers(response.data);
       calculateTotalEmptyBottles(response.data);
