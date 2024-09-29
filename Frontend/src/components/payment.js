@@ -174,7 +174,8 @@ const response = await axios.get(`https://water-plant-backend.onrender.com/bottl
   
     if (isConfirmed) {
       try {
-        await axios.delete("https://water-plant-backend.onrender.com/payment/${paymentId}");
+       await axios.delete(`https://water-plant-backend.onrender.com/payment/${paymentId}`);
+
         handleCustomerChange({ target: { value: selectedCustomer } }); // Refresh customer details
         AllPayments();
       } catch (error) {
