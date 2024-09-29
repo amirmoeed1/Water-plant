@@ -212,137 +212,138 @@ const TownCustomerManagement = () => {
   };
 
   return (
-    <div className='container'>
-      <div className='text-center mt-5 mb-4'>
-        <Link to="/dashboard" className="btn btn-secondary">Home</Link>
-      </div>
+    <div className="container mt-3">
+      <h2 className="text-center mb-3">Town & Customer Management</h2>
 
-      <h2 className='text-center mb-5'>Manage Towns and Customers</h2>
-
-      <div className='row'>
-        <div className='col-md-6 mb-4'>
-          <h4>Add Town</h4>
-          <div className="input-group mb-3">
+      {/* Town Management Section */}
+      <div className="row mb-3">
+        <div className="col-md-6">
+          <h3 className="mb-3">Add Town</h3>
+          <div className="input-group">
             <input
               type="text"
               className="form-control"
-              placeholder="New Town"
               value={newTown}
               onChange={(e) => setNewTown(e.target.value)}
+              placeholder="Enter town name"
             />
-            <button className="btn btn-primary" onClick={handleAddTown}>Add Town</button>
+            <button className="btn btn-primary" onClick={handleAddTown}>
+              Add Town
+            </button>
           </div>
-                
         </div>
 
-        <div className='col-md-6 mb-4'>
-          <h4>Select a Town</h4>
-          <div className="input-group mb-3 ">
+        <div className="col-md-6">
+          <h3 className="mb-3">Delete Town</h3>
+          <div className="input-group">
             <input
               type="text"
               className="form-control"
-              placeholder="Search Town"
               value={townSearch}
               onChange={handleTownInputChange}
+              placeholder="Search towns"
               onKeyPress={handleTownSearchKeyPress}
             />
-            {showTownSuggestions && (
-              <ul className="list-group position-absolute mt-5 suggestion-dropdown">
-                {filteredTowns.map((town) => (
-                  <li
-                    key={town._id}
-                    className="list-group-item"
-                    onClick={() => handleTownSuggestionClick(town)}
-                  >
-                    {town?.town}
-                  </li>
-                ))}
-              </ul>
-            )}
-            <select className="form-select" onChange={handleTownChange} value={selectedTown}>
-              <option value="">Select a Town</option>
-              {filteredTowns.map((town) => (
+            <div className="suggestion-dropdown">
+              {showTownSuggestions && filteredTowns.map((town) => (
+                <div key={town._id} className="dropdown-item" onClick={() => handleTownSuggestionClick(town)}>
+                  {town.town}
+                </div>
+              ))}
+            </div>
+            <button className="btn btn-danger" onClick={() => handleDeleteTown(selectedTown)}>
+              Delete Town
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Customer Management Section */}
+      <div className="row">
+        <div className="col-md-6">
+          <h3 className="mb-3">Add/Edit Customer</h3>
+          <div className="input-group">
+            <select
+              className="form-select"
+              value={selectedTown}
+              onChange={handleTownChange}
+            >
+              <option value="">Select town</option>
+              {towns.map((town) => (
                 <option key={town._id} value={town._id}>
-                  {town?.town}
+                  {town.town}
                 </option>
               ))}
             </select>
           </div>
-
-          <h4>Add Customer</h4>
-          <div className="input-group mb-3">
+          <div className="input-group">
             <input
               type="text"
               className="form-control"
-              placeholder="Customer Name"
               value={newCustomer}
               onChange={(e) => setNewCustomer(e.target.value)}
+              placeholder="Enter customer name"
             />
+          </div>
+          <div className="input-group">
             <input
               type="text"
               className="form-control"
-              placeholder="Phone Number"
               value={newPhone}
               onChange={handlePhoneInputChange}
+              placeholder="Enter customer phone number"
             />
+          </div>
+          <div className="input-group">
             <input
               type="text"
               className="form-control"
-              placeholder="Address"
               value={newAddress}
               onChange={(e) => setNewAddress(e.target.value)}
+              placeholder="Enter customer address"
             />
+          </div>
+          <div className="input-group">
             <input
               type="number"
               className="form-control"
-              placeholder="Quantity"
               value={newQuantity}
               onChange={(e) => setNewQuantity(e.target.value)}
+              placeholder="Enter number of cans"
             />
-            <button className="btn btn-primary" onClick={handleAddCustomer}>{editCustomer ? 'Update Customer' : 'Add Customer'}</button>
           </div>
-
-          <button className="btn btn-warning" onClick={handleEditCustomer} disabled={!selectedCustomer}>
-            Edit Customer
+          <button className="btn btn-primary" onClick={handleAddCustomer}>
+            {editCustomer ? 'Update Customer' : 'Add Customer'}
           </button>
-          <button className="btn btn-danger" onClick={handleDeleteCustomer} disabled={!selectedCustomer}>
-            Delete Customer
-          </button>
+        </div>
 
-          <h4 className='mt-4'>Select a Customer</h4>
-          <div className="input-group mb-3">
+        <div className="col-md-6">
+          <h3 className="mb-3">Delete/Update Customer</h3>
+          <div className="input-group">
             <input
               type="text"
               className="form-control"
-              placeholder="Search Customer"
               value={customerSearch}
               onChange={handleCustomerInputChange}
+              placeholder="Search customers"
               onKeyPress={handleCustomerSearchKeyPress}
             />
-            {showCustomerSuggestions && (
-              <ul className="list-group position-absolute mt-5 suggestion-dropdown">
-                {filteredCustomers.map((customer) => (
-                  <li
-                    key={customer._id}
-                    className="list-group-item"
-                    onClick={() => handleCustomerSuggestionClick(customer)}
-                  >
-                    {customer.name}
-                  </li>
-                ))}
-              </ul>
-            )}
-            <select className="form-select" onChange={(e) => setSelectedCustomer(e.target.value)} value={selectedCustomer}>
-              <option value="">Select a Customer</option>
-              {filteredCustomers.map((customer) => (
-                <option key={customer._id} value={customer._id}>
+            <div className="suggestion-dropdown">
+              {showCustomerSuggestions && filteredCustomers.map((customer) => (
+                <div key={customer._id} className="dropdown-item" onClick={() => handleCustomerSuggestionClick(customer)}>
                   {customer.name}
-                </option>
+                </div>
               ))}
-            </select>
+            </div>
+            <button className="btn btn-warning" onClick={handleEditCustomer}>
+              Edit Customer
+            </button>
+            <button className="btn btn-danger" onClick={handleDeleteCustomer}>
+              Delete Customer
+            </button>
           </div>
 
-          <button className="btn btn-secondary" onClick={handleNavigateToDelivery} disabled={!selectedCustomer}>
+          <button className="btn btn-primary mt-3" onClick={handleNavigateToDelivery}>
             Navigate to Delivery
           </button>
         </div>
