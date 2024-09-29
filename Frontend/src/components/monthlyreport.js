@@ -126,7 +126,7 @@ const Report = () => {
   const fetchCustomers = async (townId) => {
     try {
       const response = await axios.get(
-        `https://water-plant-backend.onrender.com/customers/${townId}`
+        `https://water-plant-backend.onrender.com/customers?townId=${townId}`
       );
       setCustomers(response.data);
       calculateTotalEmptyBottles(response.data);
