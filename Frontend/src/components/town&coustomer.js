@@ -129,7 +129,7 @@ const handleDeleteCustomer = async () => {
   if (selectedCustomer && window.confirm('Are you sure you want to delete this customer?')) {
     try {
       // Corrected the URL to use the selectedCustomer variable
-      await axios.delete(`https://water-plant-backend.onrender.com/customers/${selectedCustomer}`);
+     await axios.delete(`https://water-plant-backend.onrender.com/customers/${selectedCustomer}`);
       fetchCustomers(selectedTown); // Refresh customers list after deletion
       setSelectedCustomer(''); // Reset the selected customer
     } catch (error) {
