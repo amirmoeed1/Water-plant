@@ -116,12 +116,12 @@ const response = await axios.get(`https://water-plant-backend.onrender.com/bottl
       setCustomerDetails(null);
     }
   };
-  const calculateQuantities = (data, customerId) => {
-    const quantities = {
-      '1 Can': 0,
-      '2 Dispenser Can': 0,
+  // const calculateQuantities = (data, customerId) => {
+  //   const quantities = {
+  //     '1 Can': 0,
+  //     '2 Dispenser Can': 0,
       
-    };
+  //   };
 
     data.forEach(item => {
       if (item.customerId._id === customerId) {
