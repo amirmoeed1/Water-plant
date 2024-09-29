@@ -125,22 +125,30 @@ const TownCustomerManagement = () => {
     }
   };
 
-const handleDeleteCustomer = async () => {
-  if (selectedCustomer && window.confirm('Are you sure you want to delete this customer?')) {
-    try {
-      // Corrected the URL to use the selectedCustomer variable
-     await axios.delete(`https://water-plant-backend.onrender.com/customers/${selectedCustomer}`);
-      fetchCustomers(selectedTown); // Refresh customers list after deletion
-      setSelectedCustomer(''); // Reset the selected customer
-    } catch (error) {
-      alert('Error deleting customer: ' + error.message);
+  const handleDeleteCustomer = async () => {
+    if (selectedCustomer && window.confirm('Are you sure you want to delete this customer?')) {
+      try {
+        await axios.delete(`https://water-plant-backend.onrender.com/customers/${selectedCustomer}`);
+        fetchCustomers(selectedTown);
+        setSelectedCustomer(''); // Reset the selected customer
+      } catch (error) {
+        alert('Error deleting customer: ' + error.message);
+      }
+    } else {
+      alert('Please select a customer to delete');
     }
-  } else {
-    alert('Please select a customer to delete');
-  }
-};
+  };
 
-
+  const handleEditCustomer = () => {
+    const customerToEdit = customers.find(customer => customer._id === selectedCustomer);
+    if (customerToEdit) {
+      setNewCustomer(customerToEdit.name);
+      setNewPhone(customerToEdit.phone);
+      setNewAddress(customerToEdit.address);
+      setNewQuantity(customerToEdit.quantity);
+      setEditCustomer(customerToEdit);
+    }
+  };
 
   const filteredTowns = towns.filter(town =>
     town?.town.toLowerCase().includes(townSearch.toLowerCase())
@@ -202,6 +210,7 @@ const handleDeleteCustomer = async () => {
     setCustomerSearch('');
     setShowCustomerSuggestions(false);
   };
+
   return (
     <div className='container'>
       <div className='text-center mt-5 mb-4'>
@@ -259,15 +268,7 @@ const handleDeleteCustomer = async () => {
             </select>
           </div>
 
-          {selectedTown && (
-            <button className="btn btn-danger mst-1 " onClick={() => handleDeleteTown(selectedTown)}>Delete Town</button>
-          )}
-        </div>
-      </div>
-
-      <div className='row'>
-        <div className='col-md-6 mb-4'>
-          <h4>Add/Edit Customer</h4>
+          <h4>Add Customer</h4>
           <div className="input-group mb-3">
             <input
               type="text"
@@ -276,8 +277,6 @@ const handleDeleteCustomer = async () => {
               value={newCustomer}
               onChange={(e) => setNewCustomer(e.target.value)}
             />
-          </div>
-          <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
@@ -285,8 +284,6 @@ const handleDeleteCustomer = async () => {
               value={newPhone}
               onChange={handlePhoneInputChange}
             />
-          </div>
-          <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
@@ -294,23 +291,24 @@ const handleDeleteCustomer = async () => {
               value={newAddress}
               onChange={(e) => setNewAddress(e.target.value)}
             />
-          </div>
-          <div className="input-group mb-3">
             <input
               type="number"
               className="form-control"
-              placeholder="Quantity of Cans"
+              placeholder="Quantity"
               value={newQuantity}
               onChange={(e) => setNewQuantity(e.target.value)}
             />
+            <button className="btn btn-primary" onClick={handleAddCustomer}>{editCustomer ? 'Update Customer' : 'Add Customer'}</button>
           </div>
-          <button className="btn btn-primary" onClick={handleAddCustomer}>
-            {editCustomer ? 'Update Customer' : 'Add Customer'}
-          </button>
-        </div>
 
-        <div className='col-md-6 mb-4'>
-          <h4>Select a Customer</h4>
+          <button className="btn btn-warning" onClick={handleEditCustomer} disabled={!selectedCustomer}>
+            Edit Customer
+          </button>
+          <button className="btn btn-danger" onClick={handleDeleteCustomer} disabled={!selectedCustomer}>
+            Delete Customer
+          </button>
+
+          <h4 className='mt-4'>Select a Customer</h4>
           <div className="input-group mb-3">
             <input
               type="text"
@@ -321,7 +319,7 @@ const handleDeleteCustomer = async () => {
               onKeyPress={handleCustomerSearchKeyPress}
             />
             {showCustomerSuggestions && (
-              <ul className="list-group position-absolute suggestion-dropdown">
+              <ul className="list-group position-absolute mt-5 suggestion-dropdown">
                 {filteredCustomers.map((customer) => (
                   <li
                     key={customer._id}
@@ -333,7 +331,7 @@ const handleDeleteCustomer = async () => {
                 ))}
               </ul>
             )}
-            <select className="form-select" value={selectedCustomer} onChange={(e) => setSelectedCustomer(e.target.value)}>
+            <select className="form-select" onChange={(e) => setSelectedCustomer(e.target.value)} value={selectedCustomer}>
               <option value="">Select a Customer</option>
               {filteredCustomers.map((customer) => (
                 <option key={customer._id} value={customer._id}>
@@ -343,18 +341,22 @@ const handleDeleteCustomer = async () => {
             </select>
           </div>
 
-         {selectedCustomer && (
-  <button className="btn btn-danger" onClick={handleDeleteCustomer}>Delete Customer</button>
-)}
-
+          <button className="btn btn-secondary" onClick={handleNavigateToDelivery} disabled={!selectedCustomer}>
+            Navigate to Delivery
+          </button>
         </div>
       </div>
 
-      <div className="text-center mt-4">
-        <button className="btn btn-primary" onClick={handleNavigateToDelivery}>Go to Delivery Page</button>
-      </div>
+      <h4 className='mt-4'>Customers in Selected Town</h4>
+      <ul className="list-group">
+        {customers.map((customer) => (
+          <li key={customer._id} className="list-group-item">
+            {customer.name} - {customer.phone} - {customer.address} - {customer.quantity}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
-export default TownCustomerManagement;
 
+export default TownCustomerManagement;
