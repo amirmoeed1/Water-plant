@@ -141,9 +141,10 @@ const response = await axios.get(`https://water-plant-backend.onrender.com/bottl
     try {
       if (editPaymentId) {
         // Update existing payment
-        await axios.put("https://water-plant-backend.onrender.com/payment/${editPaymentId}", {
-          receivedAmount: amount
-        });
+       await axios.put(`https://water-plant-backend.onrender.com/payment/${editPaymentId}`, {
+  receivedAmount: amount
+});
+
         setEditPaymentId(null);
       } else {
         // Add new payment
