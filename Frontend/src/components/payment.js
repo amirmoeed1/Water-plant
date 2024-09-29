@@ -303,11 +303,28 @@ const response = await axios.get(`https://water-plant-backend.onrender.com/bottl
   
   }, []);
   useEffect(() => {
-    if (selectedCustomer) {
+    if (selectedCustomer && allBottles.length > 0) {
       const newQuantities = calculateQuantities(allBottles, selectedCustomer);
       setQuantities(newQuantities);
     }
-  }, [allBottles, selectedCustomer]);
+}, [allBottles, selectedCustomer]);
+
+const calculateQuantities = (data, customerId) => {
+    const quantities = {
+      '1 Can': 0,
+      '2 Dispenser Can': 0,
+    };
+
+    // Ensure customerId matches and the item type exists
+    data.forEach(item => {
+      if (item.customerId._id === customerId && quantities[item.type] !== undefined) {
+        quantities[item.type] += item.qty;
+      }
+    });
+
+    return quantities;
+};
+
   return (
     <div className="container mt-4">
       <Link to="/dashboard" className="btn btn-secondary mb-4">Back to Dashboard</Link>
