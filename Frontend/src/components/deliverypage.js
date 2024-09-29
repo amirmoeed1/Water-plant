@@ -70,7 +70,7 @@ const Delivery = () => {
       const totalAmount = parseInt(bottleQty) * parseFloat(pricePerBottle);
 
       if (editBottle) {
-        await axios.put(`https://water-plant-backend.onrender.com/bottles/${editBottle._id`, {
+        await axios.put(`https://water-plant-backend.onrender.com/bottles/${editBottle._id}`, {
           type: bottleType,
           qty: parseInt(bottleQty),
           pricePerBottle: parseFloat(pricePerBottle),
