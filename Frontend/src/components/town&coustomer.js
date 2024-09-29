@@ -232,6 +232,7 @@ const TownCustomerManagement = () => {
             />
             <button className="btn btn-primary" onClick={handleAddTown}>Add Town</button>
           </div>
+                
         </div>
 
         <div className='col-md-6 mb-4'>
