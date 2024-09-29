@@ -1,42 +1,79 @@
- /* TownCustomerManagement.css */
+/* Custom styles for the TownCustomerManagement component */
 
- .container {
-    background-color: #f4f4f9; /* Light background color */
-    /* background-image: url('path/to/your/background-image.jpg');   */
-    background-size: cover; /* Ensure the image covers the entire background */
-    background-position: center; /* Center the background image */
-    padding: 20px; /* Add padding to the container */
-    border-radius: 10px; /* Rounded corners */
+/* Add padding and space for mobile and tablet devices */
+.container {
+  padding: 15px;
+}
+
+/* Center the content */
+.text-center {
+  text-align: center;
+}
+
+/* Style input groups */
+.input-group {
+  margin-bottom: 1rem;
+}
+
+/* Style suggestion dropdown */
+.suggestion-dropdown {
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+/* Ensure the suggestion list stays visible */
+.position-absolute {
+  position: relative;
+}
+
+/* Responsive styling for smaller screens */
+@media (max-width: 768px) {
+  /* Stack form inputs vertically on small screens */
+  .input-group {
+    flex-direction: column;
+    align-items: stretch;
   }
-  
-  .header {
-    color: #333; /* Dark text color */
-    margin-bottom: 20px;
+
+  .input-group .form-control {
+    margin-bottom: 0.5rem;
   }
-  
-  .input-container {
-    margin-bottom: 20px; /* Space between input sections */
+
+  /* Stack buttons */
+  .btn {
+    margin-top: 0.5rem;
   }
-  
-  button {
-    background-color: #007bff; /* Blue button color */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px; /* Rounded corners for the button */
-    cursor: pointer;
+
+  .btn-primary {
+    margin-right: 0;
   }
-  
-  button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+
+  .btn-warning, .btn-danger {
+    margin-top: 0.5rem;
   }
-  
-  select {
+
+  .suggestion-dropdown {
+    position: static;
+    margin-top: 0;
+  }
+
+  /* Ensure buttons and inputs take full width on mobile */
+  .form-control,
+  .form-select,
+  .btn {
+    width: 100%;
+  }
+}
+
+/* Medium screens (e.g., tablets) */
+@media (min-width: 768px) and (max-width: 991px) {
+  /* Reduce padding */
+  .container {
     padding: 10px;
-    border-radius: 5px; /* Rounded corners for the select element */
   }
-  
-  
-.mst-1{
-  margin-left: 150px;
+
+  /* Stack form inputs vertically on medium screens */
+  .input-group {
+    flex-direction: column;
+  }
 }
