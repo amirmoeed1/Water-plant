@@ -346,15 +346,6 @@ const TownCustomerManagement = () => {
           </button>
         </div>
       </div>
-
-      // <h4 className='mt-4'>Customers in Selected Town</h4>
-      // <ul className="list-group">
-      //   {customers.map((customer) => (
-      //     <li key={customer._id} className="list-group-item">
-      //       {customer.name} - {customer.phone} - {customer.address} - {customer.quantity}
-      //     </li>
-      //   ))}
-      // </ul>
     </div>
   );
 };
