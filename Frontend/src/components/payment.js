@@ -14,7 +14,7 @@ const Payment = () => {
   const [customerDetails, setCustomerDetails] = useState(null);
   const [allPayments, setAllPayments] = useState([]);
   const [allBottles, setAllBottles] = useState([]);
-  console.log("allBottles", allBottles)
+  // console.log("allBottles", allBottles)
   const [editPaymentId, setEditPaymentId] = useState(null); // ID of the payment to be edited
 
   // const [cansCount, setCansCount] = useState(0);
@@ -24,7 +24,7 @@ const Payment = () => {
   const foundCustomer = allPayments && allPayments.find(item => item.customerId?._id === customerDetails?._id);
   // Total  Town Data TotalAmount, TotalReciving , TotalRemaining
 
-  console.log("selectedCustomer", selectedCustomer)
+  // console.log("selectedCustomer", selectedCustomer)
   const filteredData = allBottles?.filter(item => item.customerId._id === selectedCustomer);
 
   // Step 2: Use the reduce method to calculate the total sum of totalAmount

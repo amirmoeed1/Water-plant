@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { BASE_API_URL } from '../Api.Config';
 
 // const users = [
 //   { username: 'admin', password: '12345' } // Example user
@@ -15,7 +16,7 @@ const Login = () => {
   const handleLogin = async () => {
     console.log('Logging in with', { username, password }); // Log the credentials
     try {
-        const response = await axios.post("http://localhost:5000/login", { username, password });
+        const response = await axios.post(`${BASE_API_URL}/login`, { username, password });
 
         if (response.data.success) {
             localStorage.setItem('authToken', response.data.token);

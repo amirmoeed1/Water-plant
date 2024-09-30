@@ -3,6 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './TownCustomerManagement.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import mongoose from 'mongoose';
+import { BASE_API_URL } from '../Api.Config';
+// import { customerId } from '../../../backend/controller/Customer';
 
 const TownCustomerManagement = () => {
   const [towns, setTowns] = useState([]);
@@ -27,7 +30,7 @@ const TownCustomerManagement = () => {
 
   const fetchTowns = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/towns');
+      const response = await axios.get(`${BASE_API_URL}/towns`);
       setTowns(response.data);
     } catch (error) {
       alert('Error fetching towns: ' + error.message);
@@ -37,7 +40,7 @@ const TownCustomerManagement = () => {
   const fetchCustomers = async (townId) => {
     try {
       if (!townId) return;
-      const response = await axios.get(`http://localhost:5000/customers?townId=${townId}`);
+      const response = await axios.get(`${BASE_API_URL}/customers?townId=${townId}`);
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error.message);
@@ -51,7 +54,7 @@ const TownCustomerManagement = () => {
     }
 
     try {
-      await axios.post('http://localhost:5000/towns', { newtown: newTown });
+      await axios.post(`${BASE_API_URL}/towns`, { newtown: newTown });
       setNewTown('');
       fetchTowns();
     } catch (error) {
@@ -73,7 +76,7 @@ const TownCustomerManagement = () => {
 
     try {
       if (editCustomer) {
-        await axios.put(`http://localhost:5000/customers/${editCustomer._id}`, {
+        await axios.put(`${BASE_API_URL}/customers/${editCustomer._id}`, {
           customer: newCustomer,
           phone: newPhone,
           address: newAddress,
@@ -81,7 +84,7 @@ const TownCustomerManagement = () => {
         });
         setEditCustomer(null);
       } else {
-        await axios.post('http://localhost:5000/customers', {
+        await axios.post(`${BASE_API_URL}/customers`, {
           customer: newCustomer,
           town: selectedTown,
           phone: newPhone,
@@ -89,7 +92,6 @@ const TownCustomerManagement = () => {
           quantity: Number(newQuantity),
         });
       }
-
       setNewCustomer('');
       setNewPhone('');
       setNewAddress('');
@@ -97,6 +99,7 @@ const TownCustomerManagement = () => {
       fetchCustomers(selectedTown);
     } catch (error) {
       console.error('Error adding/updating customer:', error.message);
+      alert('Error adding/updating customer: ' + error.message);
     }
   };
 
@@ -114,34 +117,61 @@ const TownCustomerManagement = () => {
     navigate(`/customers/${selectedCustomer}`);
   };
 
-  const handleDeleteTown = async (townId) => {
-    if (window.confirm('Are you sure you want to delete this town?')) {
+  const handleDeleteTown = async () => {
+    if (selectedTown && window.confirm('Are you sure you want to delete this town?')) {
       try {
-        await axios.delete(`http://localhost:5000/towns/${townId}`);
+        await axios.delete(`${BASE_API_URL}/towns/${selectedTown}`);
         fetchTowns();
+        setSelectedTown(''); // Reset the selected town
       } catch (error) {
         alert('Error deleting town: ' + error.message);
       }
+    } else {
+      alert('Please select a town to delete');
     }
   };
 
-  const handleDeleteCustomer = async (customerId) => {
-    if (window.confirm('Are you sure you want to delete this customer?')) {
+ // Import this for ObjectId validation
+
+  const handleDeleteCustomer = async () => {
+    if (selectedCustomer && window.confirm('Are you sure you want to delete this customer?')) {
+      // Check if selectedCustomer is a valid MongoDB ObjectId
+      if (!mongoose.Types.ObjectId.isValid(selectedCustomer)) {
+        alert('Invalid Customer ID');
+        return;
+      }
+  
       try {
-        await axios.delete(`http://localhost:5000/customers/${customerId}`);
+        await axios.delete(`${BASE_API_URL}/customer/${selectedCustomer}`);
         fetchCustomers(selectedTown);
+        setSelectedCustomer(''); // Reset the selected customer
       } catch (error) {
         alert('Error deleting customer: ' + error.message);
       }
+    } else {
+      alert('Please select a customer to delete');
+    }
+  };
+  
+  
+
+  const handleEditCustomer = () => {
+    const customerToEdit = customers.find(customer => customer._id === selectedCustomer);
+    if (customerToEdit) {
+      setNewCustomer(customerToEdit.name);
+      setNewPhone(customerToEdit.phone);
+      setNewAddress(customerToEdit.address);
+      setNewQuantity(customerToEdit.quantity);
+      setEditCustomer(customerToEdit);
     }
   };
 
   const filteredTowns = towns.filter(town =>
-    town?.town.toLowerCase().includes(townSearch.toLowerCase())
+    town?.town?.toLowerCase().includes(townSearch.toLowerCase())
   );
 
   const filteredCustomers = customers.filter(customer =>
-    customer.name.toLowerCase().includes(customerSearch.toLowerCase())
+    customer?.name?.toLowerCase().includes(customerSearch.toLowerCase())
   );
 
   const handleTownSearchKeyPress = (e) => {
@@ -174,16 +204,14 @@ const TownCustomerManagement = () => {
     }
   };
 
-  // Show town suggestions when typing
   const handleTownInputChange = (e) => {
     setTownSearch(e.target.value);
-    setShowTownSuggestions(true); // Show the suggestions dropdown
+    setShowTownSuggestions(true);
   };
 
-  // Show customer suggestions when typing
   const handleCustomerInputChange = (e) => {
     setCustomerSearch(e.target.value);
-    setShowCustomerSuggestions(true); // Show the suggestions dropdown
+    setShowCustomerSuggestions(true);
   };
 
   const handleTownSuggestionClick = (town) => {
@@ -220,11 +248,12 @@ const TownCustomerManagement = () => {
             />
             <button className="btn btn-primary" onClick={handleAddTown}>Add Town</button>
           </div>
+                
         </div>
 
         <div className='col-md-6 mb-4'>
           <h4>Select a Town</h4>
-          <div className="input-group mb-3 ">
+          <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
@@ -233,6 +262,7 @@ const TownCustomerManagement = () => {
               onChange={handleTownInputChange}
               onKeyPress={handleTownSearchKeyPress}
             />
+            
             {showTownSuggestions && (
               <ul className="list-group position-absolute mt-5 suggestion-dropdown">
                 {filteredTowns.map((town) => (
@@ -246,30 +276,28 @@ const TownCustomerManagement = () => {
                 ))}
               </ul>
             )}
-            <select className="form-select" onChange={handleTownChange} value={selectedTown}>
-              <option value="">Select a Town</option>
-              {filteredTowns.map((town) => (
+            
+            <select className="form-select" value={selectedTown} onChange={handleTownChange}>
+              <option value=''>Select a Town</option>
+              {towns.map((town) => (
                 <option key={town._id} value={town._id}>
                   {town?.town}
                 </option>
               ))}
             </select>
+            <button className="btn btn-danger" onClick={handleDeleteTown}>Delete Town</button>
           </div>
-
-          {selectedTown && (
-            <button className="btn btn-danger mst-1 " onClick={() => handleDeleteTown(selectedTown)}>Delete Town</button>
-          )}
         </div>
       </div>
 
       <div className='row'>
         <div className='col-md-6 mb-4'>
-          <h4>Add/Edit Customer</h4>
+          <h4>Add Customer</h4>
           <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
-              placeholder="Customer Name"
+              placeholder="New Customer"
               value={newCustomer}
               onChange={(e) => setNewCustomer(e.target.value)}
             />
@@ -278,7 +306,7 @@ const TownCustomerManagement = () => {
             <input
               type="text"
               className="form-control"
-              placeholder="Phone Number"
+              placeholder="Phone"
               value={newPhone}
               onChange={handlePhoneInputChange}
             />
@@ -317,8 +345,9 @@ const TownCustomerManagement = () => {
               onChange={handleCustomerInputChange}
               onKeyPress={handleCustomerSearchKeyPress}
             />
+
             {showCustomerSuggestions && (
-              <ul className="list-group position-absolute suggestion-dropdown">
+              <ul className="list-group position-absolute mt-5 suggestion-dropdown">
                 {filteredCustomers.map((customer) => (
                   <li
                     key={customer._id}
@@ -330,24 +359,24 @@ const TownCustomerManagement = () => {
                 ))}
               </ul>
             )}
-            <select className="form-select" value={selectedCustomer} onChange={(e) => setSelectedCustomer(e.target.value)}>
-              <option value="">Select a Customer</option>
-              {filteredCustomers.map((customer) => (
+
+            <select
+              className="form-select"
+              value={selectedCustomer}
+              onChange={(e) => setSelectedCustomer(e.target.value)}
+            >
+              <option value=''>Select a Customer</option>
+              {customers.map((customer) => (
                 <option key={customer._id} value={customer._id}>
                   {customer.name}
                 </option>
               ))}
             </select>
           </div>
-
-          {selectedCustomer && (
-            <button className="btn btn-danger" onClick={() => handleDeleteCustomer(selectedCustomer)}>Delete Customer</button>
-          )}
+          <button className="btn btn-success mb-2" onClick={handleNavigateToDelivery}>Navigate to Delivery</button>
+          <button className="btn btn-warning mb-2" onClick={handleEditCustomer}>Edit Customer</button>
+          <button className="btn btn-danger" onClick={handleDeleteCustomer}>Delete Customer</button>
         </div>
-      </div>
-
-      <div className="text-center mt-4">
-        <button className="btn btn-primary" onClick={handleNavigateToDelivery}>Go to Delivery Page</button>
       </div>
     </div>
   );

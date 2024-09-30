@@ -1,0 +1,27 @@
+.container {
+  max-width: 100%;
+}
+
+h2, h3 {
+  color: #343a40;
+}
+
+ul.list-group li {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+ul.list-group li .badge {
+  font-size: 0.9rem;
+}
+
+button {
+  margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+  .col-md-6 {
+    margin-top: 20px;
+  }
+}

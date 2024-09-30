@@ -1,6 +1,9 @@
 const coustomer = require("../model/coustomer");
+const mongoose = require("mongoose");
+
 
 // Find customer by TownId
+
 
 const customer = async (req, res) => {
   const townId = req.query.townId;
@@ -20,24 +23,6 @@ const allCustomer = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-// Get Customer  by town Id
-// const getCustomerTownId = async(req,res)=>{
-//     try {
-//         const { town } = req.query;
-//         if (!town) {
-//           return res.status(400).json({ message: 'Town ID is required' });
-//         }
-//         const customers = await Customer.find({ town });
-//         if (customers.length === 0) {
-//           return res.status(404).json({ message: 'No customers found for this town' });
-//         }
-//         res.json(customers);
-//       } catch (error) {
-//         res.status(500).json({ message: error.message });
-//       }
-// }
-//
 // Find Customer By Id
 const customerId = async (req, res) => {
   const { Id } = req.params; // Access route parameter
@@ -82,38 +67,54 @@ const addCustomers = async (req, res) => {
 
 // Update Customer
 const UpdateCustomer = async (req, res) => {
+  console.log("Request Body:", req.body); // Log the request body to debug
   try {
     const { customerId } = req.params; // Get customer ID from URL parameters
     const updates = req.body; // Get updates from request body
-    const customer = await coustomer.findByIdAndUpdate(customerId, updates, {
-      new: true,
-    });
+    const customer = await customer.findByIdAndUpdate(customerId, updates, { new: true });
+
     if (!customer) {
       return res.status(404).json({ error: "Customer not found" });
     }
+
+    console.log("Updated Customer:", customer); // Log updated customer to verify
     res.json(customer);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Error updating customer: " + error.message });
+    res.status(500).json({ error: "Error updating customer: " + error.message });
   }
 };
 
+
 // Delete Customer
 const deleteCustomer = async (req, res) => {
+  const { customerId } = req.params;
+
+  console.log(req.params, "params")
+
+  // Validate customerId format
+  if (!mongoose.Types.ObjectId.isValid(customerId)) {
+    return res.status(400).json({ message: "Invalid customer ID format" });
+  }
+
   try {
-    const { customerId } = req.params; // Get customer ID from URL parameters
-    const customer = await Customer.findByIdAndDelete(customerId);
-    if (!customer) {
-      return res.status(404).json({ error: "Customer not found" });
+    const deletedCustomer = await coustomer.findByIdAndDelete(customerId);
+    console.log(deletedCustomer, "delwted");
+    
+
+    if (!deletedCustomer) {
+      return res.status(404).json({ message: "Customer not found" });
     }
-    res.json({ message: "Customer deleted successfully" });
+
+    res.status(200).json({ message: "Customer deleted successfully" });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Error deleting customer: " + error.message });
+    console.error("Error deleting customer:", error); 
+    res.status(500).json({ message: "Error deleting customer", error });
   }
 };
+
+
+
+ 
 
 // Monthaly Report 
 

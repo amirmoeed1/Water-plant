@@ -46,15 +46,17 @@ const addTown = async (req, res) => {
 };
 
 const deleteTown = async (req, res) => {
+  const { id } = req.params; // Extracting town id
   try {
-    const deletedTown = await Town.findByIdAndDelete(req.params.id);
-    if (!deletedTown)
-      return res.status(404).json({ message: "Town not found" });
-    res.json({ message: "Town deleted" });
+    // Your logic to find and delete the town by id
+    await TownModel.findByIdAndDelete(id);
+    res.status(200).json({ message: "Town deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting town", error });
+    res.status(500).json({ message: "Error deleting town" });
   }
 };
+
+ 
 module.exports = {
   town,
   townid,

@@ -1,11 +1,9 @@
-const express = require('express');
-const app = express.Router();
-const mongoose = require('mongoose');
+ 
+// const mongoose = require('mongoose');
 
  
-const Login = require('../model/login.js');
-const cors = require('cors');
-app.use(cors());
+
+ 
 
 
 
@@ -53,22 +51,11 @@ app.use(cors());
 //   }
 // });
 
- 
+//  const Login = require('../model/login.js');
 const users = [
     { username: 'admin', password: '12345' } // Example user
   ];
   
-//   app.post('/login', (req, res) => {
-//     console.log('Login attempt:', req.body); // Log the login attempt
-//     const { username, password } = req.body;
-
-//     const user = users.find(u => u.username === username && u.password === password);
-//     if (user) {
-//         res.json({ success: true, message: 'Login successful' });
-//     } else {
-//         res.json({ success: false, message: 'Invalid credentials' });
-//     }
-// });
 
   const login = async (req, res) => {
     try {
@@ -84,6 +71,9 @@ const users = [
         console.error('Error during login:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
+};
+module.exports = {
+    login,
 };
 
 
@@ -752,6 +742,3 @@ const users = [
 //   }
 // });
 
-module.exports = {
-    login,app
-};
