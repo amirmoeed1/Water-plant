@@ -1,4 +1,4 @@
-
+require("dotenv").config();
 const express = require('express');
 // const mongoose = require('mongoose');
 // const mongoose = require('mongoose');
@@ -14,7 +14,7 @@ const {customerRoutes} = require('./routes/customer.js')
 const {townRoutes} = require('./routes/town.js')
 const {bottlesRoutes} = require('./routes/bottles.js')
 const {paymetRoutes} = require('./routes/payment.js')
-const connectToDatabase = require('./db.js');
+const connectDB = require('./db.js');
 require('./db')
 // const path = require('path');
 // const path = require('path');
@@ -25,11 +25,11 @@ app.use(cors({
   credentials: true // Fixed typo here
 }));
 app.use(bodyParser.json());
-connectToDatabase();
+connectDB();
 
 
 // Start server
-const port = 8080;
+const PORT = process.env.PORT || 8081;
 app.use("/", authRoutes)
 app.use("/", customerRoutes)
 app.use("/", townRoutes)
@@ -37,6 +37,6 @@ app.use("/", bottlesRoutes)
 app.use("/", paymetRoutes)
 
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`.bold.rainbow);
 });
