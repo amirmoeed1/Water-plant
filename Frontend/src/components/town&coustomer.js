@@ -64,7 +64,7 @@ const TownCustomerManagement = () => {
 
   const handleAddCustomer = async () => {
     if (
-      typeof newCustomer !== 'string' || newCustomer.trim() === '' ||
+      typeof newCustomer !== 'string' || newCustomer === '' ||
       !selectedTown ||
       typeof newPhone !== 'string' || newPhone.trim() === '' ||
       typeof newAddress !== 'string' || newAddress.trim() === '' ||
@@ -73,11 +73,11 @@ const TownCustomerManagement = () => {
       alert('Please fill in all customer details');
       return;
     }
-
+  
     try {
       if (editCustomer) {
         await axios.put(`${BASE_API_URL}/customers/${editCustomer._id}`, {
-          customer: newCustomer,
+          name: newCustomer, // Make sure this field is correct in your API
           phone: newPhone,
           address: newAddress,
           quantity: newQuantity,
@@ -85,13 +85,14 @@ const TownCustomerManagement = () => {
         setEditCustomer(null);
       } else {
         await axios.post(`${BASE_API_URL}/customers`, {
-          customer: newCustomer,
+          name: newCustomer, // Again, ensure this matches your backend structure
           town: selectedTown,
           phone: newPhone,
           address: newAddress,
           quantity: Number(newQuantity),
         });
       }
+      // Reset fields after submission
       setNewCustomer('');
       setNewPhone('');
       setNewAddress('');
@@ -100,9 +101,9 @@ const TownCustomerManagement = () => {
     } catch (error) {
       console.error('Error adding/updating customer:', error.message);
       alert('Error adding/updating customer: ' + error.message);
-      alert('Error adding/updating customer: ' + error.message);
     }
   };
+  
 
   const handleTownChange = (e) => {
     const townId = e.target.value;
@@ -143,7 +144,7 @@ const TownCustomerManagement = () => {
         alert('Invalid Customer ID');
         return;
       }
-  
+
       try {
         await axios.delete(`${BASE_API_URL}/customer/${selectedCustomer}`);
         fetchCustomers(selectedTown);
@@ -156,26 +157,28 @@ const TownCustomerManagement = () => {
       alert('Please select a customer to delete');
     }
   };
-  
+
   const handleEditCustomer = () => {
     const customerToEdit = customers.find(customer => customer._id === selectedCustomer);
+    console.log('Customer to edit:', customerToEdit);
     if (customerToEdit) {
-      setNewCustomer(customerToEdit.name);
+      setNewCustomer(customerToEdit.name); // Change customerToEdit.name to customerToEdit.customer
       setNewPhone(customerToEdit.phone);
       setNewAddress(customerToEdit.address);
       setNewQuantity(customerToEdit.quantity);
       setEditCustomer(customerToEdit);
     }
   };
+  
 
   const filteredTowns = towns.filter(town =>
     town?.town?.toLowerCase().includes(townSearch.toLowerCase())
-     
+
   );
 
   const filteredCustomers = customers.filter(customer =>
     customer?.name?.toLowerCase().includes(customerSearch.toLowerCase())
-    
+
   );
 
   const handleTownSearchKeyPress = (e) => {
@@ -255,14 +258,14 @@ const TownCustomerManagement = () => {
             />
             <button className="btn btn-primary" onClick={handleAddTown}>Add Town</button>
           </div>
-                
-                
+
+
         </div>
 
         <div className='col-md-6 mb-4'>
           <h4>Select a Town</h4>
           <div className="input-group mb-3">
-         
+
             <input
               type="text"
               className="form-control"
@@ -271,8 +274,8 @@ const TownCustomerManagement = () => {
               onChange={handleTownInputChange}
               onKeyPress={handleTownSearchKeyPress}
             />
-            
-            
+
+
             {showTownSuggestions && (
               <ul className="list-group position-absolute mt-5 suggestion-dropdown">
                 {filteredTowns.map((town) => (
@@ -286,8 +289,8 @@ const TownCustomerManagement = () => {
                 ))}
               </ul>
             )}
-            
-            
+
+
             <select className="form-select" value={selectedTown} onChange={handleTownChange}>
               <option value=''>Select a Town</option>
               {towns.map((town) => (
@@ -297,8 +300,8 @@ const TownCustomerManagement = () => {
               ))}
             </select>
             <button className="btn btn-danger" onClick={handleDeleteTown}>Delete Town</button>
-            
-         
+
+
         </div>
       </div>
       </div>
@@ -306,23 +309,23 @@ const TownCustomerManagement = () => {
       <div className='row'>
         <div className='col-md-6 mb-4'>
           <h4>Add Customer</h4>
-         
+
           <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="New Customer"
-              placeholder="New Customer"
-              value={newCustomer}
-              onChange={(e) => setNewCustomer(e.target.value)}
-            />
+          <input
+  type="text"
+  className="form-control"
+  placeholder="New Customer"
+  value={newCustomer}
+  onChange={(e) => setNewCustomer(e.target.value)}
+/>
+
           </div>
           <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
               placeholder="Phone"
-              placeholder="Phone"
+            
               value={newPhone}
               onChange={handlePhoneInputChange}
             />
@@ -365,7 +368,7 @@ const TownCustomerManagement = () => {
 
             {showCustomerSuggestions && (
               <ul className="list-group position-absolute mt-5 suggestion-dropdown">
-               
+
                 {filteredCustomers.map((customer) => (
                   <li
                     key={customer._id}
@@ -378,7 +381,7 @@ const TownCustomerManagement = () => {
               </ul>
             )}
 
-    
+
 
             <select
               className="form-select"
@@ -403,5 +406,4 @@ const TownCustomerManagement = () => {
     </>
   );
 };
-
 export default TownCustomerManagement;

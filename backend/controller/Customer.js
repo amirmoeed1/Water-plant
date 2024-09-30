@@ -67,13 +67,22 @@ const addCustomers = async (req, res) => {
 };
 
 // Update Customer
+
 const UpdateCustomer = async (req, res) => {
   console.log("Request Body:", req.body); // Log the request body to debug
+
   try {
     const { customerId } = req.params; // Get customer ID from URL parameters
+
+    // Validate if the customerId is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(customerId)) {
+      return res.status(400).json({ error: "Invalid customer ID format" });
+    }
+
     const updates = req.body; // Get updates from request body
-    console.log("Request Body:", req.body);
-    const customer = await Customer.findByIdAndUpdate(customerId, updates, { new: true });
+
+    // Update customer in the database
+    const customer = await coustomer.findByIdAndUpdate(customerId, updates, { new: true });
 
     if (!customer) {
       return res.status(404).json({ error: "Customer not found" });
@@ -81,11 +90,12 @@ const UpdateCustomer = async (req, res) => {
 
     console.log("Updated Customer:", customer); // Log updated customer to verify
     res.json(customer);
+    
   } catch (error) {
+    console.error("Error updating customer:", error); // Log the full error message for debugging
     res.status(500).json({ error: "Error updating customer: " + error.message });
   }
 };
-
 
 // Delete Customer
 const deleteCustomer = async (req, res) => {

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './payment.css';
+import { BASE_API_URL } from '../Api.Config';
 
 const Payment = () => {
   const [towns, setTowns] = useState([]);
@@ -183,7 +184,7 @@ const Payment = () => {
     if (isConfirmed) {
       try {
         await axios.delete(
-          `https://water-plant-backend.onrender.com/payment/${paymentId}`
+          `${BASE_API_URL}/payment/${paymentId}`
         );
         handleCustomerChange({ target: { value: selectedCustomer } });
         AllPayments();
