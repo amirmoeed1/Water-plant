@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './TownCustomerManagement.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+// import { customerId } from '../../../backend/controller/Customer';
 
 const TownCustomerManagement = () => {
   const [towns, setTowns] = useState([]);
@@ -115,14 +115,17 @@ const TownCustomerManagement = () => {
     navigate(`/customers/${selectedCustomer}`);
   };
 
-  const handleDeleteTown = async (townId) => {
-    if (window.confirm('Are you sure you want to delete this town?')) {
+  const handleDeleteTown = async () => {
+    if (selectedTown && window.confirm('Are you sure you want to delete this town?')) {
       try {
-        await axios.delete(`https://water-plant-backend.onrender.com/towns/${townId}`);
+        await axios.delete(`https://water-plant-backend.onrender.com/towns/${selectedTown}`);
         fetchTowns();
+        setSelectedTown(''); // Reset the selected town
       } catch (error) {
         alert('Error deleting town: ' + error.message);
       }
+    } else {
+      alert('Please select a town to delete');
     }
   };
 
@@ -152,11 +155,11 @@ const TownCustomerManagement = () => {
   };
 
   const filteredTowns = towns.filter(town =>
-    town?.town.toLowerCase().includes(townSearch.toLowerCase())
+    town?.town?.toLowerCase().includes(townSearch.toLowerCase())
   );
 
   const filteredCustomers = customers.filter(customer =>
-    customer.name.toLowerCase().includes(customerSearch.toLowerCase())
+    customer?.name?.toLowerCase().includes(customerSearch.toLowerCase())
   );
 
   const handleTownSearchKeyPress = (e) => {
@@ -238,7 +241,7 @@ const TownCustomerManagement = () => {
 
         <div className='col-md-6 mb-4'>
           <h4>Select a Town</h4>
-          <div className="input-group mb-3 ">
+          <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
@@ -258,46 +261,45 @@ const TownCustomerManagement = () => {
                   >
                     {town?.town}
                   </li>
-                  
                 ))}
               </ul>
-              
             )}
             
-            <select className="form-select" onChange={handleTownChange} value={selectedTown}>
-              <option value="">Select a Town</option>
-              {filteredTowns.map((town) => (
+            <select className="form-select" value={selectedTown} onChange={handleTownChange}>
+              <option value=''>Select a Town</option>
+              {towns.map((town) => (
                 <option key={town._id} value={town._id}>
                   {town?.town}
                 </option>
               ))}
             </select>
+            <button className="btn btn-danger" onClick={handleDeleteTown}>Delete Town</button>
           </div>
-            <button className="btn col-md-8 ms-4 btn-danger" onClick={handleDeleteTown} disabled={!selectedTown}>
-            Delete Customer
-          </button>
-          </div>
+        </div>
+      </div>
+
+      <div className='row'>
+        <div className='col-md-6 mb-4'>
           <h4>Add Customer</h4>
-                <div ClassName="row">
-          <div className="input-group col-md-6 mb-3">
+          <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
-              placeholder="Customer Name"
+              placeholder="New Customer"
               value={newCustomer}
               onChange={(e) => setNewCustomer(e.target.value)}
             />
-                </div>
-                <div className="input-group col-md-6 mb-3">
+          </div>
+          <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
-              placeholder="Phone Number"
+              placeholder="Phone"
               value={newPhone}
               onChange={handlePhoneInputChange}
             />
-                </div>
-                <div className="input-group col-md-6 mb-3">
+          </div>
+          <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
@@ -305,29 +307,24 @@ const TownCustomerManagement = () => {
               value={newAddress}
               onChange={(e) => setNewAddress(e.target.value)}
             />
-                </div>
-                <div className="input-group col-md-6 mb-3">
+          </div>
+          <div className="input-group mb-3">
             <input
               type="number"
               className="form-control"
-              placeholder="Quantity"
+              placeholder="Quantity of Cans"
               value={newQuantity}
               onChange={(e) => setNewQuantity(e.target.value)}
             />
-                </div>
-                </div>
-            <button className="btn col-md-10 mt-3 mb-4 btn-primary" onClick={handleAddCustomer}>{editCustomer ? 'Update Customer' : 'Add Customer'}</button>
+          </div>
+          <button className="btn btn-primary" onClick={handleAddCustomer}>
+            {editCustomer ? 'Update Customer' : 'Add Customer'}
+          </button>
+        </div>
 
-          <button className="btn col-md-5  btn-warning" onClick={handleEditCustomer} disabled={!selectedCustomer}>
-            Edit Customer
-          </button>
-          <button className="btn col-md-5 ms-4 btn-danger" onClick={handleDeleteCustomer} disabled={!selectedCustomer}>
-            Delete Customer
-          </button>
-         
-<div className='row'>
-          <h4 className='mt-4'>Select a Customer</h4>
-          <div className="input-group col-md-3 mb-3">
+        <div className='col-md-6 mb-4'>
+          <h4>Select a Customer</h4>
+          <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
@@ -336,6 +333,7 @@ const TownCustomerManagement = () => {
               onChange={handleCustomerInputChange}
               onKeyPress={handleCustomerSearchKeyPress}
             />
+
             {showCustomerSuggestions && (
               <ul className="list-group position-absolute mt-5 suggestion-dropdown">
                 {filteredCustomers.map((customer) => (
@@ -349,24 +347,27 @@ const TownCustomerManagement = () => {
                 ))}
               </ul>
             )}
-            <select className="form-select" onChange={(e) => setSelectedCustomer(e.target.value)} value={selectedCustomer}>
-              <option value="">Select a Customer</option>
-              {filteredCustomers.map((customer) => (
+
+            <select
+              className="form-select"
+              value={selectedCustomer}
+              onChange={(e) => setSelectedCustomer(e.target.value)}
+            >
+              <option value=''>Select a Customer</option>
+              {customers.map((customer) => (
                 <option key={customer._id} value={customer._id}>
                   {customer.name}
                 </option>
               ))}
             </select>
           </div>
-
-          <button className="btn btn-secondary " onClick={handleNavigateToDelivery} disabled={!selectedCustomer}>
-           Go to Delivery Page
-          </button>
+          <button className="btn btn-success mb-2" onClick={handleNavigateToDelivery}>Navigate to Delivery</button>
+          <button className="btn btn-warning mb-2" onClick={handleEditCustomer}>Edit Customer</button>
+          <button className="btn btn-danger" onClick={handleDeleteCustomer}>Delete Customer</button>
         </div>
       </div>
-      </div>
-    
+    </div>
   );
 };
 
-export default TownCustomerManagement
+export default TownCustomerManagement;
