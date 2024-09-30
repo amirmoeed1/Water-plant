@@ -396,9 +396,6 @@ const TownCustomerManagement = () => {
           <button className="btn btn-success mb-2" onClick={handleNavigateToDelivery}>Navigate to Delivery</button>
           <button className="btn btn-warning mb-2" onClick={handleEditCustomer}>Edit Customer</button>
           <button className="btn btn-danger" onClick={handleDeleteCustomer}>Delete Customer</button>
-          <button className="btn btn-success mb-2" onClick={handleNavigateToDelivery}>Navigate to Delivery</button>
-          <button className="btn btn-warning mb-2" onClick={handleEditCustomer}>Edit Customer</button>
-          <button className="btn btn-danger" onClick={handleDeleteCustomer}>Delete Customer</button>
         </div>
 
       </div>
