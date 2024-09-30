@@ -273,7 +273,7 @@ const TownCustomerManagement = () => {
               ))}
             </select>
           </div>
-            <button className="btn col-md-8 ms-4 btn-danger" onClick={handleDeleteCustomer} disabled={!selectedCustomer}>
+            <button className="btn col-md-8 ms-4 btn-danger" onClick={handleDeleteTown} disabled={!selectedTown}>
             Delete Customer
           </button>
           </div>
