@@ -1,6 +1,6 @@
 // db.js
 const mongoose = require("mongoose");
-const mongoose = require("mongoose");
+ 
 
 // MongoDB connection string (replace with your actual URI)
 
