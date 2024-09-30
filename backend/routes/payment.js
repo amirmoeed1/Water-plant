@@ -8,7 +8,7 @@ paymetRoutes.get("/payment", getAllPayments);
 paymetRoutes.get("/paymentcustomer/:customerId", getPaymetByCustomerID);
 paymetRoutes.get("/paymentdate",paymetnDate );
 paymetRoutes.put("/payment/:id",UpdatePaymet );
-paymetRoutes.put("/payment/:id",DeletePayment );
+paymetRoutes.delete("/payment/:id",DeletePayment );
 
 module.exports = {
   paymetRoutes,

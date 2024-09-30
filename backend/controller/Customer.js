@@ -72,7 +72,7 @@ const UpdateCustomer = async (req, res) => {
   try {
     const { customerId } = req.params; // Get customer ID from URL parameters
     const updates = req.body; // Get updates from request body
-    const customer = await customer.findByIdAndUpdate(customerId, updates, { new: true });
+    const customer = await coustomer.findByIdAndUpdate(customerId, updates, { new: true });
 
     if (!customer) {
       return res.status(404).json({ error: "Customer not found" });

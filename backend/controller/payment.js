@@ -110,8 +110,13 @@ const UpdatePaymet = async (req, res) => {
 };
 // Delete a payment
 const DeletePayment = async (req, res) => {
+
+  console.log("hello");
+  
   try {
     await Payment.findByIdAndDelete(req.params.id);
+
+
     res.status(204).end();
   } catch (error) {
     res.status(500).json({ message: error.message });
