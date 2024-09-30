@@ -64,11 +64,11 @@ const TownCustomerManagement = () => {
 
   const handleAddCustomer = async () => {
     if (
-      newCustomer.trim() === '' ||
+      typeof newCustomer !== 'string' || newCustomer.trim() === '' ||
       !selectedTown ||
-      newPhone.trim() === '' ||
-      newAddress.trim() === '' ||
-      newQuantity.trim() === ''
+      typeof newPhone !== 'string' || newPhone.trim() === '' ||
+      typeof newAddress !== 'string' || newAddress.trim() === '' ||
+      typeof newQuantity !== 'string' || newQuantity.trim() === '' 
     ) {
       alert('Please fill in all customer details');
       return;
