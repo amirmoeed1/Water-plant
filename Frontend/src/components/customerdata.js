@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Import axios for HTTP requests
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from 'react-router-dom';
 
 const TownCustomerForm = () => {
   const [towns, setTowns] = useState([]); // State to store towns
@@ -46,6 +47,9 @@ const TownCustomerForm = () => {
 
   return (
     <div className="container mt-5">
+      <div className='text-center mt-5 mb-4'>
+        <Link to="/dashboard" className="btn btn-secondary">DashBoard Page</Link>
+      </div>
       <h2 className="mb-4">Select Town and Customer</h2>
       
       {/* Town Selection */}

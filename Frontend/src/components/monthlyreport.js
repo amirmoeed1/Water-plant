@@ -3,6 +3,7 @@ import axios from "axios";
 import "jspdf-autotable";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import "./monthlyreport.css"; // Import custom CSS for additional styling
+import { Link } from "react-router-dom";
 
 const Report = () => {
   // Initial States
@@ -155,6 +156,9 @@ const Report = () => {
 
   return (
     <div className="container mt-4">
+    <div className='text-center mt-5 mb-4'>
+        <Link to="/dashboard" className="btn btn-secondary">DashBoard Page</Link>
+      </div>
       <h2 className="mb-4 text-center">Monthly Report</h2>
 
       <div className="row mb-4 text-center">

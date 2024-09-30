@@ -240,7 +240,7 @@ const TownCustomerManagement = () => {
     <>
     <div className='container'>
       <div className='text-center mt-5 mb-4'>
-        <Link to="/dashboard" className="btn btn-secondary">Home</Link>
+        <Link to="/dashboard" className="btn btn-secondary">DashBoard Page</Link>
       </div>
 
       <h2 className='text-center mb-5'>Manage Towns and Customers</h2>
@@ -396,9 +396,9 @@ const TownCustomerManagement = () => {
               ))}
             </select>
           </div>
-          <button className="btn btn-success mb-2" onClick={handleNavigateToDelivery}>Navigate to Delivery</button>
-          <button className="btn btn-warning mb-2" onClick={handleEditCustomer}>Edit Customer</button>
-          <button className="btn btn-danger" onClick={handleDeleteCustomer}>Delete Customer</button>
+          <button className="btn btn-success mb-2 " onClick={handleNavigateToDelivery}>Go to Delivery</button>
+          <button className="btn btn-warning mb-2 ms-4" onClick={handleEditCustomer}>Edit Customer</button>
+          <button className="btn btn-danger ms-4" onClick={handleDeleteCustomer}>Delete Customer</button>
         </div>
 
       </div>
