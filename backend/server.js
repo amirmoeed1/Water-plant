@@ -1,9 +1,11 @@
 
 const express = require('express');
 // const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
+
 
 // const Login = require('./api/login.js');
 
@@ -15,10 +17,16 @@ const {paymetRoutes} = require('./routes/payment.js')
 const connectToDatabase = require('./db.js');
 require('./db')
 // const path = require('path');
+// const path = require('path');
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: '*', // Replace '*' with a specific origin or array of allowed origins if needed
+  methods: ["POST", "GET", "DELETE", "PUT"],
+  credentials: true // Fixed typo here
+}));
 app.use(bodyParser.json());
 connectToDatabase();
+
 
 // Start server
 const port = 8080;

@@ -1,5 +1,6 @@
 // db.js
 const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
 // MongoDB connection string (replace with your actual URI)
 
@@ -16,7 +17,19 @@ const connectToDatabase = async () => {
     );
   } catch (error) {
     console.error(`Error connecting to MongoDB: ${error.message}`);
+  try {
+    const connection = await mongoose.connect(MONGO_URI, {
+      
+    });
+    console.log(
+      `MongoDB connected successfully: ${connection.connection.host}`
+    );
+  } catch (error) {
+    console.error(`Error connecting to MongoDB: ${error.message}`);
 
+    // Retry logic - optional
+    setTimeout(connectToDatabase, 5001); // Retry connecting after 5 seconds
+  }
     // Retry logic - optional
     setTimeout(connectToDatabase, 5001); // Retry connecting after 5 seconds
   }
@@ -25,15 +38,9 @@ const connectToDatabase = async () => {
 // Listen for MongoDB connection events
 mongoose.connection.on("disconnected", () => {
   console.log("MongoDB connection lost. Attempting to reconnect...");
-});
-
-mongoose.connection.on("reconnected", () => {
-  console.log("MongoDB successfully reconnected!");
-});
-
-mongoose.connection.on("error", (err) => {
-  console.error(`MongoDB connection error: ${err.message}`);
-});
+})
+ 
+ 
 
 // Export the connection function
 module.exports = connectToDatabase;

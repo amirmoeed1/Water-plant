@@ -14,6 +14,7 @@ const customer = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+ 
 // Get all Customers
 const allCustomer = async (req, res) => {
   try {

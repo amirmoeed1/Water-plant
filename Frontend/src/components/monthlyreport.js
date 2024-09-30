@@ -75,7 +75,7 @@ const Report = () => {
   // Fetch all towns
   const fetchTowns = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/towns");
+      const response = await axios.get('https://water-plant-backend.onrender.com/towns');
       setTowns(response.data);
     } catch (error) {
       console.error("Error fetching towns:", error);
@@ -84,7 +84,7 @@ const Report = () => {
   // Fetch all customer
   const fetchAllCustomer = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/allCustomers");
+      const response = await axios.get('https://water-plant-backend.onrender.com/allCustomers');
       setAllCustomers(response.data);
     } catch (error) {
       console.error("Error fetching towns:", error);
@@ -94,7 +94,7 @@ const Report = () => {
   // Fetch data for a single town
   const fetchSingleTownData = async (townId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/towns/${townId}`); // API endpoint to get a single town's data
+      const response = await axios.get(`https://water-plant-backend.onrender.com/towns/${townId}`); // API endpoint to get a single town's data
       // setTownData(response.data); // Save the town data
       console.log("res....", response);
     } catch (error) {
@@ -105,7 +105,7 @@ const Report = () => {
   // Fetch all bottles
   const fetchAllBottles = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/bottles");
+      const response = await axios.get('https://water-plant-backend.onrender.com/bottles');
       setAllBottles(response.data);
     } catch (error) {
       console.error("Error fetching bottles:", error);
@@ -115,7 +115,7 @@ const Report = () => {
   // Fetch all payments
   const fetchAllPayments = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/payment");
+      const response = await axios.get('https://water-plant-backend.onrender.com/payment');
       setAllPayments(response.data);
     } catch (error) {
       console.error("Error fetching payments:", error);
@@ -126,7 +126,7 @@ const Report = () => {
   const fetchCustomers = async (townId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/customers?townId=${townId}`
+        `https://water-plant-backend.onrender.com/customers?townId=${townId}`
       );
       setCustomers(response.data);
       calculateTotalEmptyBottles(response.data);
@@ -143,58 +143,7 @@ const Report = () => {
     setTotalEmptyBottles(total);
   };
 
-  // Handle generating the report
-  // const handleGenerateReport = async () => {
-  //   if (!selectedTown || !selectedCustomer || !month) {
-  //     alert("Please select a town, customer, and month.");
-  //     return;
-  //   }
-  //   try {
-  //     const response = await axios.get(
-  //       `http://localhost:5000/report/${selectedTown}/${selectedCustomer}/${month}`
-  //     ); // Added the forward slash
-
-  //     setReport(response.data);
-  //     // generatePDF(response.data);
-  //   } catch (error) {
-  //     console.error("Error generating report:", error);
-  //   }
-  // };
-
-  //   const generatePDF = (data) => {
-  //     const doc = new jsPDF();
-
-  //     // Ensure selected town and customer are defined
-  //     const selectedTownData = towns.find(t => t._id === selectedTown);
-  //     const selectedCustomerData = customers.find(c => c._id === selectedCustomer);
-
-  //     // Add Title
-  //     doc.text('Monthly Report', 14, 16);
-  //     doc.text(`Town: ${selectedTownData ? selectedTownData.name : 'Unknown Town'}`, 14, 22);
-  //     doc.text(`Customer: ${selectedCustomerData ? selectedCustomerData.name : 'Unknown Customer'}`, 14, 28);
-  //     doc.text(`Month: ${month}`, 14, 34);
-
-  //     // Add Table of Deliveries
-  //     if (data.deliveries && data.deliveries.length > 0) {
-  //         doc.autoTable({
-  //             startY: 40,
-  //             head: [['Date', 'Amount', 'Bottles']],
-  //             body: data.deliveries.map((delivery) => [
-  //                 delivery.date, delivery.amount, delivery.bottles
-  //             ]),
-  //         });
-  //     }
-
-  //     // Add Summary Information Below Table
-  //     doc.text(`Total Amount: ${data.totalAmount || 0}`, 14, doc.lastAutoTable ? doc.lastAutoTable.finalY + 10 : 50);
-  //     doc.text(`Total Bottles: ${data.totalBottles || 0}`, 14, doc.lastAutoTable ? doc.lastAutoTable.finalY + 16 : 56);
-  //     doc.text(`Total Bill: ${data.totalBill || 0}`, 14, doc.lastAutoTable ? doc.lastAutoTable.finalY + 22 : 62);
-  //     doc.text(`Total Paid: ${data.totalPaid || 0}`, 14, doc.lastAutoTable ? doc.lastAutoTable.finalY + 28 : 68);
-  //     doc.text(`Remaining Balance: ${data.balance || 0}`, 14, doc.lastAutoTable ? doc.lastAutoTable.finalY + 34 : 74);
-
-  //     // Save PDF
-  //     doc.save('monthly-report.pdf');
-  // };
+ 
 
   // Fetch towns, bottles, and payments on component load
   useEffect(() => {
