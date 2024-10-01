@@ -195,7 +195,7 @@ const Payment = () => {
     }
   };
 
-  const generatePDF = () => {
+   const generatePDF = () => {
     const doc = new jsPDF();
   
     // Set custom colors
@@ -210,7 +210,7 @@ const Payment = () => {
   
     // Add the logo at the top center of the PDF
     const pageWidth = doc.internal.pageSize.getWidth();
-    const logoWidth = 70;
+    const logoWidth = 50;
     const logoHeight = 50;
     const logoX = (pageWidth - logoWidth) / 2; // Center the logo
     doc.addImage(logoUrl, 'PNG', logoX, 1, logoWidth, logoHeight); // (image, format, x, y, width, height)
@@ -225,39 +225,39 @@ const Payment = () => {
     doc.setLineWidth(1);
     doc.line(20, 65, pageWidth - 20, 65);
   
-// Customer Details Section
-if (customerDetails) {
-  doc.setFontSize(14);
-  doc.setTextColor(textColor);
-  doc.text(`Customer Name: ${customerDetails?.name || ''}`, 20, 75);
+    // Customer Details Section
+    if (customerDetails) {
+      doc.setFontSize(14);
+      doc.setTextColor(textColor);
+      doc.text(`Customer Name: ${customerDetails?.name || ''}`, 20, 75);
   
-  // Prepare data for the table
-  const tableData = [
-    { label: 'Total Amount', value: `RS ${totalCustomerAmount || 0}` },
-    { label: 'Received Amount', value: `RS ${foundCustomer?.receivedAmount || 0}` },
-    { label: 'Remaining Balance', value: `RS ${totalCustomerAmount - (foundCustomer?.receivedAmount || 0)}` },
-    { label: 'Number of Cans', value: quantities['1 Can'] },
-    { label: 'Number of Dispenser Cans', value: quantities['2 Dispenser Can'] },
-  ];
-
-  // Define the columns for the table
-  const columns = [
-    { header: 'Description', dataKey: 'label' },
-    { header: 'Amount', dataKey: 'value' },
-  ];
-
-  // Add table to the PDF
-  doc.autoTable({
-    head: [columns.map(col => col.header)], // Set table header
-    body: tableData.map(item => [item.label, item.value]), // Set table body
-    startY: 80, // Start Y position below the customer name
-    theme: 'grid', // You can change the theme to 'striped', 'plain', etc.
-    styles: {
-      cellPadding: 3,
-      fontSize: 10,
-    },
-  });
-}
+      // Prepare data for the table
+      const tableData = [
+        { label: 'Total Amount', value: `RS ${totalCustomerAmount || 0}` },
+        { label: 'Received Amount', value: `RS ${foundCustomer?.receivedAmount || 0}` },
+        { label: 'Remaining Balance', value: `RS ${totalCustomerAmount - (foundCustomer?.receivedAmount || 0)}` },
+        { label: 'Number of Cans', value: quantities['1 Can'] },
+        { label: 'Number of Dispenser Cans', value: quantities['2 Dispenser Can'] },
+      ];
+  
+      // Define the columns for the table
+      const columns = [
+        { header: 'Description', dataKey: 'label' },
+        { header: 'Amount', dataKey: 'value' },
+      ];
+  
+      // Add table to the PDF
+      doc.autoTable({
+        head: [columns.map(col => col.header)], // Set table header
+        body: tableData.map(item => [item.label, item.value]), // Set table body
+        startY: 80, // Start Y position below the customer name
+        theme: 'grid', // You can change the theme to 'striped', 'plain', etc.
+        styles: {
+          cellPadding: 3,
+          fontSize: 10,
+        },
+      });
+    }
   
     // Footer Section
     const footerY = doc.internal.pageSize.getHeight() - 140; // Position the footer at the bottom with space for details
@@ -269,12 +269,11 @@ if (customerDetails) {
     doc.setTextColor(footerColor);
     doc.text('Contact Number: 0333-6566564', 20, footerY);
     doc.text('JazzCash Number: 0333-6566564 (Account Name: IJAZ Ahmad)', 20, footerY + 10);
-     
-
-    
   
-    // Save the PDF
-    doc.save('customer_payment_report.pdf');
+    // Save the PDF with customer name
+    const customerName = customerDetails?.name || 'unknown_customer'; // Fallback in case name is not available
+    const fileName = `customer_payment_report_${customerName}.pdf`.replace(/[^a-zA-Z0-9]/g, '_'); // Replace special characters with underscores
+    doc.save(fileName);
   };
   
   
