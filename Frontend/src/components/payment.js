@@ -194,10 +194,13 @@ const Payment = () => {
       }
     }
   };
-
-   const generatePDF = () => {
-    const doc = new jsPDF();
-  
+const generatePDF = () => {
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a5', // Use A5 format for printing
+    });
+    
     // Set custom colors
     const headerColor = '#4CAF50'; // Green color for the header
     const textColor = '#000000'; // Black color for text
@@ -205,39 +208,48 @@ const Payment = () => {
     const amountColor = '#1976D2'; // Blue color for amounts
     const cansColor = '#FFA000'; // Amber color for cans
   
-    // Load the logo image (if it's a URL, convert to base64 or download first)
+    // Load the logo image (ensure it's small)
     const logoUrl = 'logoplant.jpg'; // Path to your image file
-  
+    
     // Add the logo at the top center of the PDF
     const pageWidth = doc.internal.pageSize.getWidth();
-    const logoWidth = 50;
-    const logoHeight = 50;
+    const logoWidth = 30; // Smaller size for logo
+    const logoHeight = 30; // Smaller size for logo
     const logoX = (pageWidth - logoWidth) / 2; // Center the logo
     doc.addImage(logoUrl, 'PNG', logoX, 1, logoWidth, logoHeight); // (image, format, x, y, width, height)
-  
+    
     // Title below the logo
-    doc.setFontSize(22);
+    doc.setFontSize(16);
     doc.setTextColor(headerColor);
-    doc.text('Customer Payment Report', pageWidth / 2, 60, { align: 'center' });
-  
+    doc.text('Customer Payment Report', pageWidth / 2, 40, { align: 'center' });
+    
     // Draw a colored line below the title
     doc.setDrawColor(headerColor);
-    doc.setLineWidth(1);
-    doc.line(20, 65, pageWidth - 20, 65);
+    doc.setLineWidth(0.5);
+    doc.line(10, 45, pageWidth - 10, 45); // Adjusted line width
   
     // Customer Details Section
+    let startY = 55; // Starting Y position after header
     if (customerDetails) {
-      doc.setFontSize(14);
+      doc.setFontSize(12);
       doc.setTextColor(textColor);
-      doc.text(`Customer Name: ${customerDetails?.name || ''}`, 20, 75);
+      doc.text(`Customer Name: ${customerDetails?.name || ''}`, 10, startY);
   
       // Prepare data for the table
+      const totalCustomerAmount = 3100; // Example total amount
+      const receivedAmount = 350; // Example received amount
+      const remainingBalance = totalCustomerAmount - receivedAmount; // Calculate remaining balance
+      const quantities = {
+        '1 Can': 2,
+        '2 Dispenser Can': 20
+      }; // Example quantities
+  
       const tableData = [
-        { label: 'Total Amount', value: `RS ${totalCustomerAmount || 0}` },
-        { label: 'Received Amount', value: `RS ${foundCustomer?.receivedAmount || 0}` },
-        { label: 'Remaining Balance', value: `RS ${totalCustomerAmount - (foundCustomer?.receivedAmount || 0)}` },
-        { label: 'Number of Cans', value: quantities['1 Can'] },
-        { label: 'Number of Dispenser Cans', value: quantities['2 Dispenser Can'] },
+        { label: 'Total Amount', value: `RS ${totalCustomerAmount}`, color: amountColor },
+        { label: 'Received Amount', value: `RS ${receivedAmount}`, color: amountColor },
+        { label: 'Remaining Balance', value: `RS ${remainingBalance}`, color: amountColor },
+        { label: 'Number of Cans', value: quantities['1 Can'], color: cansColor },
+        { label: 'Number of Dispenser Cans', value: quantities['2 Dispenser Can'], color: cansColor },
       ];
   
       // Define the columns for the table
@@ -246,36 +258,49 @@ const Payment = () => {
         { header: 'Amount', dataKey: 'value' },
       ];
   
-      // Add table to the PDF
+      // Add table header with colors
       doc.autoTable({
-        head: [columns.map(col => col.header)], // Set table header
-        body: tableData.map(item => [item.label, item.value]), // Set table body
-        startY: 80, // Start Y position below the customer name
-        theme: 'grid', // You can change the theme to 'striped', 'plain', etc.
+        head: [columns.map(col => ({
+          content: col.header,
+          styles: { fillColor: headerColor, textColor: '#FFFFFF' } // White text on header
+        }))],
+        body: tableData.map(item => [
+          { content: item.label, styles: { textColor: textColor } }, // Black text for description
+          { content: item.value, styles: { textColor: item.color } } // Use defined color for amounts
+        ]),
+        startY: startY + 10, // Start Y position below the customer name
+        theme: 'grid', // Simplified theme for printing
         styles: {
           cellPadding: 3,
           fontSize: 10,
+          halign: 'left', // Align text to the left
+          valign: 'middle',
         },
+        margin: { top: 10, bottom: 10, left: 10, right: 10 }, // Set margins
       });
+  
+      startY = doc.autoTable.previous.finalY; // Update startY to the end of the table
     }
   
     // Footer Section
-    const footerY = doc.internal.pageSize.getHeight() - 140; // Position the footer at the bottom with space for details
+    const footerY = doc.internal.pageSize.getHeight() - 60; // Position the footer at the bottom with enough space
+    doc.setFontSize(10);
+    doc.setTextColor(footerColor);
+  
+    // Add a line above the contact number
     doc.setDrawColor(footerColor);
     doc.setLineWidth(0.5);
-    doc.line(20, footerY - 10, pageWidth - 20, footerY - 10); // Line above footer
+    doc.line(20, footerY - 15, pageWidth - 20, footerY - 15); // Line above footer
   
-    doc.setFontSize(12);
-    doc.setTextColor(footerColor);
-    doc.text('Contact Number: 0333-6566564', 20, footerY);
-    doc.text('JazzCash Number: 0333-6566564 (Account Name: IJAZ Ahmad)', 20, footerY + 10);
-  
+    // Footer Text
+    doc.text('Contact Number: 0333-6566564', 10, footerY);
+    doc.text('JazzCash Number: 0333-6566564 (Account Name: IJAZ Ahmad)', 10, footerY + 5);
+    
     // Save the PDF with customer name
     const customerName = customerDetails?.name || 'unknown_customer'; // Fallback in case name is not available
     const fileName = `customer_payment_report_${customerName}.pdf`.replace(/[^a-zA-Z0-9]/g, '_'); // Replace special characters with underscores
     doc.save(fileName);
   };
-  
   
   
 
