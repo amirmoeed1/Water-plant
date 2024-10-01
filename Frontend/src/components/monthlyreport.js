@@ -294,33 +294,7 @@ const Report = () => {
             )}
           </div>
         )}
-
-        {/* <div className="col-md-7">
-          <input
-            type="month"
-            className="form-control"
-            value={month}
-            onChange={(e) => setMonth(e.target.value)}
-          />
-        </div> */}
-      </div>
-
-      {/* Single Town Data Display */}
-
-      {/* <div className="text-center">
-        <button className="btn btn-primary" onClick={handleGenerateReport}>Generate Report</button>
-      </div>
-
-      {report && (
-        <div className="card mt-4 p-3 shadow-sm">
-          <h3 className="card-title">Report for {selectedCustomer} in {month}</h3>
-          <p><strong>Total Bottles:</strong> {report.totalBottles}</p>
-          <p><strong>Total Amount:</strong> {report.totalAmount}</p>
-          <p><strong>Total Bill:</strong> {report.totalBill}</p>
-          <p><strong>Total Paid:</strong> {report.totalPaid}</p>
-          <p><strong>Remaining Balance:</strong> {report.balance}</p>
-        </div>
-      )} */}
+    </div>
     </div>
   );
 };
