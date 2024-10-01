@@ -210,7 +210,7 @@ const Payment = () => {
   
     // Add the logo at the top center of the PDF
     const pageWidth = doc.internal.pageSize.getWidth();
-    const logoWidth = 50;
+    const logoWidth = 70;
     const logoHeight = 50;
     const logoX = (pageWidth - logoWidth) / 2; // Center the logo
     doc.addImage(logoUrl, 'PNG', logoX, 1, logoWidth, logoHeight); // (image, format, x, y, width, height)
