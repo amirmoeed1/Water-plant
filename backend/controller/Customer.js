@@ -42,16 +42,16 @@ const customerId = async (req, res) => {
 
 // Add Customer
 const addCustomers = async (req, res) => {
-  const { customer, town, phone, address, quantity } = req.body;
+  const { name, town, phone, address, quantity } = req.body;
   // Ensure required fields are present
-  if (!customer || !town || !phone || !address || !quantity) {
+  if (!name || !town || !phone || !address || !quantity) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
     // Create a new customer
     const newCustomer = new coustomer({
-      name: customer,
+      name,
       town,
       phone,
       address,
