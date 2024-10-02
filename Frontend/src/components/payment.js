@@ -41,9 +41,9 @@ const Payment = () => {
   
 
     const [quantities, setQuantities] = useState({
-      '1 Can': 0,
-      '2 Dispenser Can': 0,
-      '3 Local Can': 0
+      '1 Bottle': 0,
+      '2 Dispenser Bottle': 0,
+      
     });
   
     
@@ -113,8 +113,8 @@ const Payment = () => {
         );
         setCustomerDetails(response.data);
         setQuantities({
-          '1 Can': 0,
-          '2 Dispenser Can': 0,
+          '1 Bottle': 0,
+          '2 Dispenser Bottle': 0,
         });
       } catch (error) {
         console.error('Error fetching customer details:', error);
@@ -127,8 +127,8 @@ const Payment = () => {
 
   const calculateQuantities = (data, customerId) => {
     const quantities = {
-      '1 Can': 0,
-      '2 Dispenser Can': 0,
+      '1 Bottle': 0,
+      '2 Dispenser Bottle': 0,
     };
 
     data.forEach((item) => {
@@ -239,8 +239,8 @@ const Payment = () => {
       
       // Set color for cans
       doc.setTextColor(cansColor);
-      doc.text(`Number of Cans: ${quantities['1 Can']}`, 20, 130);
-      doc.text(`Number of Dispenser Cans: ${quantities['2 Dispenser Can']}`, 20, 140); // 10px below the previous line
+      doc.text(`Number of Bottles: ${quantities['1 Bottle']}`, 20, 130);
+      doc.text(`Number of Dispenser Bottles: ${quantities['2 Dispenser Bottle']}`, 20, 140); // 10px below the previous line
     }
   
     // Footer Section
@@ -347,11 +347,11 @@ const Payment = () => {
           </p> */}
 
           <p>
-            <strong>Number of Cans:</strong> {quantities['1 Can']}
+            <strong>Bottles:</strong> {quantities['1 Bottle']}
           </p>
           <p>
-            <strong>Number of Dispensers Cans:</strong>{' '}
-            {quantities['2 Dispenser Can']}
+            <strong>Dispensers Bottles:</strong>{' '}
+            {quantities['2 Dispenser Bottle']}
           </p>
 
           <div className="mb-3">
