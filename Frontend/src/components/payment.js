@@ -53,7 +53,7 @@ const Payment = () => {
   const fetchTowns = async () => {
     try {
       const response = await axios.get(
-        'https://water-plant-backend.onrender.com/towns'
+        `${BASE_API_URL}/towns`
       );
       setTowns(response.data);
     } catch (error) {
@@ -64,7 +64,7 @@ const Payment = () => {
   const AllPayments = async () => {
     try {
       const response = await axios.get(
-        'https://water-plant-backend.onrender.com/payment'
+       `${BASE_API_URL}payment`
       );
       setAllPayments(response.data);
     } catch (error) {
@@ -75,7 +75,7 @@ const Payment = () => {
   const AllBottles = async (id) => {
     try {
       const response = await axios.get(
-        `https://water-plant-backend.onrender.com/bottles/${id}`
+       `${BASE_API_URL}/bottles/${id}`
       );
       setAllBottles(response.data);
     } catch (error) {
@@ -86,7 +86,7 @@ const Payment = () => {
   const fetchCustomers = async (townId) => {
     try {
       const response = await axios.get(
-        `https://water-plant-backend.onrender.com/customers?townId=${townId}`
+        `${BASE_API_URL}/customers?townId=${townId}`
       );
       setCustomers(response.data);
     } catch (error) {
@@ -109,7 +109,7 @@ const Payment = () => {
       AllBottles(customerId);
       try {
         const response = await axios.get(
-          `https://water-plant-backend.onrender.com/customer/${customerId}`
+         `${BASE_API_URL}/customer/${customerId}`
         );
         setCustomerDetails(response.data);
         setQuantities({
@@ -150,14 +150,14 @@ const Payment = () => {
     try {
       if (editPaymentId) {
         await axios.put(
-          `https://water-plant-backend.onrender.com/payment/${editPaymentId}`,
+          `${BASE_API_URL}/payment/${editPaymentId}`,
           {
             receivedAmount: amount,
           }
         );
         setEditPaymentId(null);
       } else {
-        await axios.post('https://water-plant-backend.onrender.com/payment', {
+        await axios.post(`${BASE_API_URL}/payment`, {
           town: selectedTown,
           customerId: selectedCustomer,
           receivedAmount: amount,

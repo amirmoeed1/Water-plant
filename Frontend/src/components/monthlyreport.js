@@ -4,6 +4,7 @@ import "jspdf-autotable";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import "./monthlyreport.css"; // Import custom CSS for additional styling
 import { Link } from "react-router-dom";
+import { BASE_API_URL } from "../Api.Config";
 
 const Report = () => {
   // Initial States
@@ -76,7 +77,7 @@ const Report = () => {
   // Fetch all towns
   const fetchTowns = async () => {
     try {
-      const response = await axios.get('https://water-plant-backend.onrender.com/towns');
+      const response = await axios.get(`${BASE_API_URL}/towns`);
       setTowns(response.data);
     } catch (error) {
       console.error("Error fetching towns:", error);
@@ -85,7 +86,7 @@ const Report = () => {
   // Fetch all customer
   const fetchAllCustomer = async () => {
     try {
-      const response = await axios.get('https://water-plant-backend.onrender.com/allCustomers');
+      const response = await axios.get(`${BASE_API_URL}/allCustomers`);
       setAllCustomers(response.data);
     } catch (error) {
       console.error("Error fetching towns:", error);
@@ -95,7 +96,7 @@ const Report = () => {
   // Fetch data for a single town
   const fetchSingleTownData = async (townId) => {
     try {
-      const response = await axios.get(`https://water-plant-backend.onrender.com/towns/${townId}`); // API endpoint to get a single town's data
+      const response = await axios.get(`${BASE_API_URL}/towns/${townId}`); // API endpoint to get a single town's data
       // setTownData(response.data); // Save the town data
       console.log("res....", response);
     } catch (error) {
@@ -106,7 +107,7 @@ const Report = () => {
   // Fetch all bottles
   const fetchAllBottles = async () => {
     try {
-      const response = await axios.get('https://water-plant-backend.onrender.com/bottles');
+      const response = await axios.get(`${BASE_API_URL}/bottles`);
       setAllBottles(response.data);
     } catch (error) {
       console.error("Error fetching bottles:", error);
@@ -116,7 +117,7 @@ const Report = () => {
   // Fetch all payments
   const fetchAllPayments = async () => {
     try {
-      const response = await axios.get('https://water-plant-backend.onrender.com/payment');
+      const response = await axios.get(`${BASE_API_URL}/payment`);
       setAllPayments(response.data);
     } catch (error) {
       console.error("Error fetching payments:", error);
@@ -127,7 +128,7 @@ const Report = () => {
   const fetchCustomers = async (townId) => {
     try {
       const response = await axios.get(
-        `https://water-plant-backend.onrender.com/customers?townId=${townId}`
+        `${BASE_API_URL}/customers?townId=${townId}`
       );
       setCustomers(response.data);
       calculateTotalEmptyBottles(response.data);

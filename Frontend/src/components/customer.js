@@ -5,6 +5,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas'; // For capturing HTML to generate PDF
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './payment.css';
+import { BASE_API_URL } from '../Api.Config';
 
 const Payment = () => {
   const [towns, setTowns] = useState([]);
@@ -40,7 +41,7 @@ const Payment = () => {
 
     const fetchTowns = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/towns');
+        const response = await axios.get(`${BASE_API_URL}/towns`);
         // const response = await axios.get('api/townrates/towns?type=get-towns');
         setTowns(response.data);
       } catch (error) {
@@ -49,7 +50,7 @@ const Payment = () => {
     };
   const AllPayments = async () => {
     try {
-      const response = await axios.get("https://water-plant-backend.onrender.com/payment");
+      const response = await axios.get(`${BASE_API_URL}/payment`);
       setAllPayments(response.data);
     } catch (error) {
       console.error('Error fetching payments:', error);
@@ -58,7 +59,7 @@ const Payment = () => {
 
   const AllBottles = async (id) => {
     try {
-      const response = await axios.get("https://water-plant-backend.onrender.com/bottles/${id}");
+      const response = await axios.get(`${BASE_API_URL}/bottles/${id}`);
       setAllBottles(response.data);
     } catch (error) {
       console.error('Error fetching bottles:', error);
@@ -67,7 +68,7 @@ const Payment = () => {
 
   const fetchCustomers = async (townId) => {
     try {
-      const response = await axios.get("https://water-plant-backend.onrender.com/customers?townId=${townId}");
+      const response = await axios.get(`${BASE_API_URL}/customers?townId=${townId}`);
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
@@ -88,7 +89,7 @@ const Payment = () => {
     if (customerId) {
       AllBottles(customerId);
       try {
-        const response = await axios.get("https://water-plant-backend.onrender.com/customer/${customerId}");
+        const response = await axios.get(`${BASE_API_URL}customer/${customerId}`);
         setCustomerDetails(response.data);
         // Reset quantities
         setQuantities({
@@ -129,13 +130,13 @@ const Payment = () => {
     try {
       if (editPaymentId) {
         // Update existing payment
-        await axios.put("https://water-plant-backend.onrender.com/payment/${editPaymentId}", {
+        await axios.put(`${BASE_API_URL}/payment/${editPaymentId}`, {
           receivedAmount: amount
         });
         setEditPaymentId(null);
       } else {
         // Add new payment
-        await axios.post("https://water-plant-backend.onrender.com/payment", {
+        await axios.post(`${BASE_API_URL}/payment`, {
           town:selectedTown,
           customerId: selectedCustomer,
           receivedAmount: amount,
@@ -157,7 +158,7 @@ const Payment = () => {
 
   const handleDeletePayment = async (paymentId) => {
     try {
-      await axios.delete("https://water-plant-backend.onrender.com/payment/${paymentId}");
+      await axios.delete(`${BASE_API_URL}/payment/${paymentId}`);
       handleCustomerChange({ target: { value: selectedCustomer } }); // Refresh customer details
       AllPayments();
     } catch (error) {

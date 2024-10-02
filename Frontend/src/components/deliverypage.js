@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';  // Import a date picker library like react-datepicker
 import 'react-datepicker/dist/react-datepicker.css';  // Make sure to import the CSS for the date picker
+import { BASE_API_URL } from '../Api.Config';
 
 const Delivery = () => {
   const { customerId } = useParams();
@@ -33,7 +34,7 @@ const Delivery = () => {
   const fetchCustomer = async () => {
     try {
       if (!customerId) throw new Error('Customer ID is missing');
-      const response = await axios.get(`https://water-plant-backend.onrender.com/customer/${customerId}`);
+      const response = await axios.get(`${BASE_API_URL}/customer/${customerId}`);
       setCustomer(response.data);
       const quantity = response.data.quantity || 0;
       setEmptyBottles(quantity);
@@ -44,7 +45,7 @@ const Delivery = () => {
 
   const fetchBottles = async () => {
     try {
-      const response = await axios.get(`https://water-plant-backend.onrender.com/bottles/${customerId}`);
+      const response = await axios.get(`${BASE_API_URL}/bottles/${customerId}`);
       setBottles(response.data);
     } catch (error) {
       console.error('Error fetching bottles:', error.response || error.message);
@@ -53,7 +54,7 @@ const Delivery = () => {
 
   const fetchPayments = async () => {
     try {
-      const response = await axios.get(`https://water-plant-backend.onrender.com/paymentcustomer/${customerId}`);
+      const response = await axios.get(`${BASE_API_URL}/paymentcustomer/${customerId}`);
       setPayments(response.data);
     } catch (error) {
       console.error('Error fetching payments:', error.response || error.message);
@@ -70,7 +71,7 @@ const Delivery = () => {
       const totalAmount = parseInt(bottleQty) * parseFloat(pricePerBottle);
 
       if (editBottle) {
-        await axios.put(`https://water-plant-backend.onrender.com/bottles/${editBottle._id}`, {
+        await axios.put(`${BASE_API_URL}/bottles/${editBottle._id}`, {
           type: bottleType,
           qty: parseInt(bottleQty),
           pricePerBottle: parseFloat(pricePerBottle),
@@ -80,7 +81,7 @@ const Delivery = () => {
         });
         setEditBottle(null);
       } else {
-        await axios.post('https://water-plant-backend.onrender.com/bottles', {
+        await axios.post(`${BASE_API_URL}/bottles`, {
           type: bottleType,
           qty: parseInt(bottleQty),
           pricePerBottle: parseFloat(pricePerBottle),
@@ -101,7 +102,7 @@ const Delivery = () => {
 
   const handleDeleteBottle = async (id) => {
     try {
-      await axios.delete(`https://water-plant-backend.onrender.com/bottles/${id}`);
+      await axios.delete(`${BASE_API_URL}/bottles/${id}`);
       fetchBottles();
     } catch (error) {
       console.error('Error deleting bottle:', error.response || error.message);

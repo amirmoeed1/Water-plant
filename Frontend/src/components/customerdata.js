@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Import axios for HTTP requests
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
+import { BASE_API_URL } from '../Api.Config';
 
 const TownCustomerForm = () => {
   const [towns, setTowns] = useState([]); // State to store towns
@@ -13,7 +14,7 @@ const TownCustomerForm = () => {
   useEffect(() => {
     const fetchTowns = async () => {
       try {
-        const response = await axios.get('https://water-plant-backend.onrender.com/towns');
+        const response = await axios.get(`${BASE_API_URL}/towns`);
         console.log('Fetched towns:', response.data); // Debugging line
         setTowns(response.data); // Assuming the response is an array of towns
       } catch (error) {
@@ -30,7 +31,7 @@ const TownCustomerForm = () => {
     setSelectedCustomer(null); // Reset customer when town changes
 
     try {
-      const response = await axios.get(`https://water-plant-backend.onrender.com/customers?townId=${townId}`);
+      const response = await axios.get(`${BASE_API_URL}/customers?townId=${townId}`);
       console.log('Fetched customers:', response.data); // Debugging line
       setCustomers(response.data); // Assuming the response is an array of customers
     } catch (error) {
