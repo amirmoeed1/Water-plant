@@ -3,7 +3,6 @@ import axios from "axios";
 import "jspdf-autotable";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import "./monthlyreport.css"; // Import custom CSS for additional styling
-import { Link } from "react-router-dom";
 import { BASE_API_URL } from "../Api.Config";
 
 const Report = () => {
@@ -14,12 +13,9 @@ const Report = () => {
   const [selectedCustomer, setSelectedCustomer] = useState("");
   const [allBottles, setAllBottles] = useState([]);
   const [allPayments, setAllPayments] = useState([]);
-  const [startDate, setStartDate] = useState(new Date());
-  console.log("allPayments...", allPayments)
-
   const [allCustomers, setAllCustomers] = useState([]);
   const [totalEmptyBottles, setTotalEmptyBottles] = useState(0);
-  
+
 
   // calculating for Sumer Customer , bottles, payments
   const totalEmptybotle = allCustomers?.reduce((total, customer) => {
@@ -31,73 +27,22 @@ const Report = () => {
     .filter((customer) => customer._id === selectedCustomer) // Filter by customer ID
     .reduce((total, customer) => total + (customer.quantity || 0), 0); // Sum the quantities
 
+  // Calculate total amount, received amount, and remaining balance
+  const totalSum = allBottles?.reduce((accumulator, currentItem) => {
+    return accumulator + (currentItem.totalAmount || 0);
+  }, 0);
 
-    const options = { month: 'long' }; // Use 'long' for full month name
-    const month = startDate.toLocaleString('default', options);
-    function getMonthName(dateString) {
-      const date = new Date(dateString);
-      const monthNames = [
-          "January", "February", "March", "April", "May", "June", 
-          "July", "August", "September", "October", "November", "December"
-      ];
-      return monthNames[date.getMonth()];
-    }
-
-    // Function to get month and year from date
-    function getMonthYear(dateString) {
-        const date = new Date(dateString);
-        return {
-            month: date.toLocaleString('default', { month: 'long' }),
-            year: date.getFullYear()
-        };
-    }
-    
-    // Extract target month and year from startDate
-    const { month: targetMonth, year: targetYear } = getMonthYear(startDate);
-    
-    // Filter bottles by the target month and year
-    const filteredBottles = allBottles.filter(bottle => {
-        const { month, year } = getMonthYear(bottle.createdAt);
-        return month === targetMonth && year === targetYear;
-        // return month >= startDate && year <= endDate; 
-    });
-    
-    // Calculate total amount, received amount, and remaining balance
-    const totals = filteredBottles.reduce((accumulator, currentItem) => {
-        accumulator.totalAmount += currentItem.totalAmount || 0;
-        accumulator.receivedAmount += currentItem.pricePerBottle * currentItem.qty || 0; // Assuming received amount can be calculated
-        accumulator.remainingBalance += (currentItem.totalAmount - (currentItem.pricePerBottle * currentItem.qty)) || 0; // Example calculation
-        return accumulator;
-    }, {
-        totalAmount: 0,
-        receivedAmount: 0,
-        remainingBalance: 0
-    });
-    
-   
-  const filterPayments = allPayments.filter(payment => {
-    const paymentDate = new Date(payment.paymentDate);
-    return paymentDate.getMonth() === targetMonth && paymentDate.getFullYear() === targetYear;
-});
-
-// Calculate total received amount for the filtered payments
-const totalReceivedAmount = filterPayments.reduce(
+  const totalReceivedAmount = allPayments.reduce(
     (sum, paymentItem) => sum + paymentItem.receivedAmount,
     0
-);
-
-
-  const totalRemainingAmount = totals.totalAmount - totalReceivedAmount;
+  );
+  const totalRemainingAmount = totalSum - totalReceivedAmount;
 
   // Town Calculation
   // Total  Town Data TotalAmount, TotalReciving , TotalRemaining
   const filteredPayments = allPayments?.filter((payment) => {
     return payment.town?._id === selectedTown;
   });
-  // Filter payments by the target month/year and selected town
-
-  // const startDate = new Date("Sat Nov 01 2024 18:38:09 GMT+0500 (Pakistan Standard Time)");
-   
   // Step 2: Calculate the total sum  of totalAmount and receivedAmount
   const townSums = filteredPayments.reduce(
     (totals, payment) => {
@@ -199,7 +144,7 @@ const totalReceivedAmount = filterPayments.reduce(
     setTotalEmptyBottles(total);
   };
 
- 
+
 
   // Fetch towns, bottles, and payments on component load
   useEffect(() => {
@@ -211,15 +156,12 @@ const totalReceivedAmount = filterPayments.reduce(
 
   return (
     <div className="container mt-4">
-    <div className='text-center mt-5 mb-4'>
-        <Link to="/dashboard" className="btn btn-secondary">DashBoard Page</Link>
-      </div>
       <h2 className="mb-4 text-center">Monthly Report</h2>
 
       <div className="row mb-4 text-center">
         <div className="col-md-3">
           <h5>
-            Total Amount: <span className="badge bg-primary">{totals?.totalAmount}</span>
+            Total Amount: <span className="badge bg-primary">{totalSum}</span>
           </h5>
         </div>
         <div className="col-md-3">
@@ -349,7 +291,32 @@ const totalReceivedAmount = filterPayments.reduce(
             )}
           </div>
         )}
-    </div>
+
+        {/* <div className="col-md-7">
+          <input
+            type="month"
+            className="form-control"
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+          />
+        </div> */}
+      </div>
+
+      {/* Single Town Data Display */}
+
+      {/* <div className="text-center">
+        <button className="btn btn-primary" onClick={handleGenerateReport}>Generate Report</button>
+      </div>
+      {report && (
+        <div className="card mt-4 p-3 shadow-sm">
+          <h3 className="card-title">Report for {selectedCustomer} in {month}</h3>
+          <p><strong>Total Bottles:</strong> {report.totalBottles}</p>
+          <p><strong>Total Amount:</strong> {report.totalAmount}</p>
+          <p><strong>Total Bill:</strong> {report.totalBill}</p>
+          <p><strong>Total Paid:</strong> {report.totalPaid}</p>
+          <p><strong>Remaining Balance:</strong> {report.balance}</p>
+        </div>
+      )} */}
     </div>
   );
 };

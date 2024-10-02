@@ -3,8 +3,6 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'react-datepicker/dist/react-datepicker.css'; // Import CSS for datepicker
-import DatePicker from 'react-datepicker'; 
 import './payment.css';
 import { BASE_API_URL } from '../Api.Config';
 
@@ -13,82 +11,31 @@ const Payment = () => {
   const [customers, setCustomers] = useState([]);
   const [selectedTown, setSelectedTown] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState('');
-  console.log("selectedCustomer", selectedCustomer)
   const [paymentAmount, setPaymentAmount] = useState('');
   const [customerDetails, setCustomerDetails] = useState(null);
   const [allPayments, setAllPayments] = useState([]);
   const [allBottles, setAllBottles] = useState([]);
+  
   // console.log("allBottles", allBottles)
   const [editPaymentId, setEditPaymentId] = useState(null); // ID of the payment to be edited
-   // New state for the selected start and end dates
-   const [startDate, setStartDate] = useState(new Date());
-   console.log("startDate", startDate)
-   const [endDate, setEndDate] = useState(new Date());
-   console.log("allPayments .....",allPayments)
 
   // const [cansCount, setCansCount] = useState(0);
   // const [dispensersCount, setDispensersCount] = useState(0);
   // const [localcan, setlocalcan] = useState(0);
 
   const foundCustomer = allPayments && allPayments.find(item => item.customerId?._id === customerDetails?._id);
-  console.log("fontcustomer.....", foundCustomer)
+  // const BalanceCustomer = allPayments && allPayments.find(item => item.customerId?._id === customerDetails?._id);
+  // Total  Town Data TotalAmount, TotalReciving , TotalRemaining
+
+  // console.log("selectedCustomer", selectedCustomer)
   const filteredData = allBottles?.filter(item => item.customerId._id === selectedCustomer);
-  // console.log("filterdData...", filteredData)
 
- // Filter data based on the createdAt date
-const filteredByDate = filteredData?.filter((item) => {
-  const createdAtDate = new Date(item.createdAt); 
-  return createdAtDate >= startDate && createdAtDate <= endDate; 
-});
-
-const totalCustomerAmount = filteredByDate?.reduce((accumulator, currentItem) => {
-  return accumulator + currentItem.totalAmount;
-}, 0);
-
-
-
-// Step 1: Filter payments by customerId
-
-const options = { month: 'long' }; // Use 'long' for full month name
-const month = startDate.toLocaleString('default', options);
-function getMonthName(dateString) {
-  const date = new Date(dateString);
-  const monthNames = [
-      "January", "February", "March", "April", "May", "June", 
-      "July", "August", "September", "October", "November", "December"
-  ];
-  return monthNames[date.getMonth()];
-}
-
-// Filter payments for the selected customer and within the specified month
-const customerPayments = allPayments.filter(payment => {
-  // Check if the payment has a customerId and matches the selectedCustomer
-  if (payment.customerId?._id === selectedCustomer) {
-      // Get the month name from the paymentDate
-      return getMonthName(payment.paymentDate) === month;
-  }
-  return false; // Exclude payments without a customerId
-});
-
-// Calculate the total remainingBalance, receivedAmount, and totalAmount
-const totals = customerPayments.reduce((acc, payment) => {
-  acc.totalAmount += payment.totalAmount || 0;
-  acc.receivedAmount += payment.receivedAmount || 0;
-  acc.remainingBalance += payment.remainingBalance || 0;
-  return acc;
-}, {
-  totalAmount: 0,
-  receivedAmount: 0,
-  remainingBalance: 0
-});
-
-// Log the results
-console.log(`Totals for customer ID ${selectedCustomer} in the month of ${month}:`);
-console.log("Total Amount:", totals.totalAmount);
-console.log("Total Received Amount:", totals.receivedAmount);
-console.log("Total Remaining Balance:", totals.remainingBalance);
-
-
+  // Step 2: Use the reduce method to calculate the total sum of totalAmount
+  const totalCustomerAmount = filteredData.reduce((accumulator, currentItem) => {
+      return accumulator + currentItem.totalAmount;
+  }, 0); // Initial value of the accumulator is 0
+  
+  console.log("totalCustomerAmount", totalCustomerAmount)
 
 
 
@@ -380,42 +327,24 @@ console.log("Total Remaining Balance:", totals.remainingBalance);
           </div>
         )}
       </div>
- {/* DatePicker for selecting payment date range */}
- <div className="mb-3">
-            <label htmlFor="paymentStartDate" className="form-label">Payment Start Date</label>
-            <DatePicker
-              selected={startDate}
-              onChange={date => setStartDate(date)}
-              className="form-control"
-            />
-          </div>
-
-          {/* <div className="mb-3">
-            <label htmlFor="paymentEndDate" className="form-label">Payment End Date</label>
-            <DatePicker
-              selected={endDate}
-              onChange={date => setEndDate(date)}
-              className="form-control"
-            />
-          </div> */}
 
       {customerDetails ? (
         <div className="card p-4 mb-4 shadow-sm" id="payment-report">
           <h3>Customer Details</h3>
           <p>
-            <strong>Total Amount:</strong> RS {totals.totalAmount || 0}
+            <strong>Total Amount:</strong> RS {totalCustomerAmount || 0}
           </p>
           <p>
             <strong>Received Amount:</strong> RS{' '}
-            {totals.receivedAmount|| 0}
+            {foundCustomer?.receivedAmount || 0}
           </p>
           <p>
             <strong>Remaining Balance:</strong> RS{' '}
-            {totals.remainingBalance || 0}
+            {totalCustomerAmount - foundCustomer?.receivedAmount || 0}
           </p>
           {/* <p>
             <strong>Priviouse Balance:</strong> RS{' '}
-            { 0}
+            {totalCustomerAmount - BalanceCustomer?.receivedAmount || 0}
           </p> */}
 
           <p>
