@@ -1,4 +1,6 @@
 const Town = require("../model/town");
+const mongoose = require('mongoose');
+
 
 const town = async (req, res) => {
   try {
@@ -45,14 +47,25 @@ const addTown = async (req, res) => {
   }
 };
 
+
 const deleteTown = async (req, res) => {
-  const { id } = req.params; // Extracting town id
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid town ID" });
+  }
+
   try {
-    // Your logic to find and delete the town by id
-    await TownModel.findByIdAndDelete(id);
+    const deletedTown = await Town.findByIdAndDelete(id);
+
+    if (!deletedTown) {
+      return res.status(404).json({ message: "Town not found" });
+    }
+
     res.status(200).json({ message: "Town deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting town" });
+    console.error("Error deleting town:", error);
+    res.status(500).json({ message: "Error deleting town", error: error.message });
   }
 };
 
