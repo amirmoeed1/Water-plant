@@ -124,16 +124,16 @@ const TownCustomerManagement = () => {
     if (selectedTown && window.confirm('Are you sure you want to delete this town?')) {
       try {
         await axios.delete(`${BASE_API_URL}/towns/${selectedTown}`);
-        fetchTowns();
-        setSelectedTown(''); // Reset the selected town
-        setSelectedTown(''); // Reset the selected town
+        fetchTowns(); // Refetch the towns list after deletion
+        setSelectedTown(''); // Reset the selected town once
       } catch (error) {
         alert('Error deleting town: ' + error.message);
       }
     } else {
       alert('Please select a town to delete');
-    } 
+    }
   };
+  
 
  // Import this for ObjectId validation
 

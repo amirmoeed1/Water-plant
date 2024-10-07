@@ -1,86 +1,172 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
-import jsPDF from 'jspdf';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './payment.css';
-import { BASE_API_URL } from '../Api.Config';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import jsPDF from "jspdf";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "react-datepicker/dist/react-datepicker.css"; // Import CSS for datepicker
+import DatePicker from "react-datepicker";
+import "./payment.css";
+import { BASE_API_URL } from "../Api.Config";
 
 const Payment = () => {
   const [towns, setTowns] = useState([]);
   const [customers, setCustomers] = useState([]);
-  const [selectedTown, setSelectedTown] = useState('');
-  const [selectedCustomer, setSelectedCustomer] = useState('');
-  const [paymentAmount, setPaymentAmount] = useState('');
+  const [selectedTown, setSelectedTown] = useState("");
+  const [selectedCustomer, setSelectedCustomer] = useState("");
+  console.log("selectedCustomer", selectedCustomer);
+  const [paymentAmount, setPaymentAmount] = useState("");
   const [customerDetails, setCustomerDetails] = useState(null);
   const [allPayments, setAllPayments] = useState([]);
   const [allBottles, setAllBottles] = useState([]);
-  
-  // console.log("allBottles", allBottles)
+  console.log("allBottles.....", allPayments);
   const [editPaymentId, setEditPaymentId] = useState(null); // ID of the payment to be edited
+  // New state for the selected start and end dates
+  const [startDate, setStartDate] = useState(new Date());
+  console.log("startDate", startDate);
+  const [endDate, setEndDate] = useState(new Date());
 
-  // const [cansCount, setCansCount] = useState(0);
-  // const [dispensersCount, setDispensersCount] = useState(0);
-  // const [localcan, setlocalcan] = useState(0);
+  // const foundCustomer = allPayments && allPayments.find(item => item.customerId?._id === customerDetails?._id);
+  const foundCustomer = allPayments?.find((item) => {
+    return (
+      item.customerId &&
+      String(item?.customerId?._id) === String(selectedCustomer)
+    );
+  });
+  // const filteredData = allBottles?.filter(item => item.customerId._id === selectedCustomer);
+  const filteredData = allBottles?.filter(
+    (item) => item.customerId._id === selectedCustomer
+  );
+  const startMonth = startDate.getMonth() + 1; // getMonth() returns 0-indexed month, so add 1
+  const startYear = startDate.getFullYear();
 
-  const foundCustomer = allPayments && allPayments.find(item => item.customerId?._id === customerDetails?._id);
-  // const BalanceCustomer = allPayments && allPayments.find(item => item.customerId?._id === customerDetails?._id);
-  // Total  Town Data TotalAmount, TotalReciving , TotalRemaining
+  const filteredByDate = filteredData?.filter((item) => {
+    const createdAtDate = new Date(item.createdAt);
 
-  // console.log("selectedCustomer", selectedCustomer)
-  const filteredData = allBottles?.filter(item => item.customerId._id === selectedCustomer);
+    const itemMonth = createdAtDate.getUTCMonth() + 1; // Add 1 to make it 1-indexed
+    const itemYear = createdAtDate.getUTCFullYear();
 
-  // Step 2: Use the reduce method to calculate the total sum of totalAmount
-  const totalCustomerAmount = filteredData.reduce((accumulator, currentItem) => {
+    return itemMonth === startMonth && itemYear === startYear;
+  });
+
+  console.log("filteredByDate", filteredByDate);
+  const totalCustomerAmount = filteredByDate?.reduce(
+    (accumulator, currentItem) => {
       return accumulator + currentItem.totalAmount;
-  }, 0); // Initial value of the accumulator is 0
+    },
+    0
+  );
+  const totalQtyByType = filteredByDate?.reduce((accumulator, currentItem) => {
+    const type = currentItem.type;
+    const qty = currentItem.qty;
   
-  console.log("totalCustomerAmount", totalCustomerAmount)
+    // Initialize the quantity for this type if not present
+    if (!accumulator[type]) {
+      accumulator[type] = 0;
+    }
+  
+    // Add the current item's quantity to the total for this type
+    accumulator[type] += qty;
+  
+    return accumulator;
+  }, {});
+  
+  // Log the total quantity by bottle type
+  console.log("Total quantity by type:", totalQtyByType);
 
+  // Step 1: Filter payments by customerId Monthly Report
 
+  const options = { month: "long" }; // Use 'long' for full month name
+  const month = startDate.toLocaleString("default", options);
+  function getMonthName(dateString) {
+    const date = new Date(dateString);
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    return monthNames[date.getMonth()];
+  }
+  // Filter payments for the selected customer and within the specified month
+  const customerPayments = allPayments.filter((payment) => {
+    // Check if the payment has a customerId and matches the selectedCustomer
+    if (payment.customerId?._id === selectedCustomer) {
+      // Get the month name from the paymentDate
+      return getMonthName(payment.paymentDate) === month;
+    }
+    return false; // Exclude payments without a customerId
+  });
 
-  
+  // Calculate the total remainingBalance, receivedAmount, and totalAmount
+  const totals = customerPayments.reduce(
+    (acc, payment) => {
+      acc.totalAmount += payment.totalAmount || 0;
+      acc.receivedAmount += payment.receivedAmount || 0;
+      acc.remainingBalance += payment.remainingBalance || 0;
+      return acc;
+    },
+    {
+      totalAmount: 0,
+      receivedAmount: 0,
+      remainingBalance: 0,
+    }
+  );
 
-    const [quantities, setQuantities] = useState({
-      '1 Bottle': 0,
-      '2 Dispenser Bottle': 0,
-      
-    });
-  
-    
-  
-  
+  // Get User Remaning Balance of All Month
+  const balanceOfAllMonths = allPayments.filter((payment) => {
+    // Check if the payment has a customerId and matches the selectedCustomer
+    return payment.customerId?._id === selectedCustomer;
+  });
+
+  // Calculate the total remainingBalance, receivedAmount, and totalAmount for all months
+  const TotalRemaningBalance = balanceOfAllMonths.reduce(
+    (acc, payment) => {
+      acc.remainingBalance += payment.remainingBalance || 0;
+      return acc;
+    },
+    {
+      remainingBalance: 0,
+    }
+  );
+  console.log("RemaningBalance", TotalRemaningBalance);
+
+  const [quantities, setQuantities] = useState({
+    "1 Bottle": 0,
+    "2 Dispenser Bottle": 0,
+  });
 
   const fetchTowns = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_API_URL}/towns`
-      );
+      const response = await axios.get(`${BASE_API_URL}/towns`);
       setTowns(response.data);
     } catch (error) {
-      console.error('Error fetching towns:', error);
+      console.error("Error fetching towns:", error);
     }
   };
 
   const AllPayments = async () => {
     try {
-      const response = await axios.get(
-       `${BASE_API_URL}/payment`
-      );
+      const response = await axios.get(`${BASE_API_URL}/payment`);
       setAllPayments(response.data);
     } catch (error) {
-      console.error('Error fetching payments:', error);
+      console.error("Error fetching payments:", error);
     }
   };
 
   const AllBottles = async (id) => {
     try {
-      const response = await axios.get(
-       `${BASE_API_URL}/bottles/${id}`
-      );
+      const response = await axios.get(`${BASE_API_URL}/bottles/${id}`);
       setAllBottles(response.data);
     } catch (error) {
-      console.error('Error fetching bottles:', error);
+      console.error("Error fetching bottles:", error);
     }
   };
 
@@ -91,7 +177,7 @@ const Payment = () => {
       );
       setCustomers(response.data);
     } catch (error) {
-      console.error('Error fetching customers:', error);
+      console.error("Error fetching customers:", error);
     }
   };
 
@@ -110,15 +196,15 @@ const Payment = () => {
       AllBottles(customerId);
       try {
         const response = await axios.get(
-         `${BASE_API_URL}/customer/${customerId}`
+          `${BASE_API_URL}/customer/${customerId}`
         );
         setCustomerDetails(response.data);
         setQuantities({
-          '1 Bottle': 0,
-          '2 Dispenser Bottle': 0,
+          "1 Bottle": 0,
+          "2 Dispenser Bottle": 0,
         });
       } catch (error) {
-        console.error('Error fetching customer details:', error);
+        console.error("Error fetching customer details:", error);
         setCustomerDetails(null);
       }
     } else {
@@ -128,8 +214,8 @@ const Payment = () => {
 
   const calculateQuantities = (data, customerId) => {
     const quantities = {
-      '1 Bottle': 0,
-      '2 Dispenser Bottle': 0,
+      "1 Bottle": 0,
+      "2 Dispenser Bottle": 0,
     };
 
     data.forEach((item) => {
@@ -144,18 +230,15 @@ const Payment = () => {
     const amount = parseFloat(paymentAmount);
 
     if (isNaN(amount) || amount <= 0 || !selectedCustomer) {
-      alert('Please enter a valid payment amount and select a customer');
+      alert("Please enter a valid payment amount and select a customer");
       return;
     }
 
     try {
       if (editPaymentId) {
-        await axios.put(
-          `${BASE_API_URL}/payment/${editPaymentId}`,
-          {
-            receivedAmount: amount,
-          }
-        );
+        await axios.put(`${BASE_API_URL}/payment/${editPaymentId}`, {
+          receivedAmount: amount,
+        });
         setEditPaymentId(null);
       } else {
         await axios.post(`${BASE_API_URL}/payment`, {
@@ -165,11 +248,11 @@ const Payment = () => {
           totalAmount: totalCustomerAmount,
         });
       }
-      setPaymentAmount('');
+      setPaymentAmount("");
       handleCustomerChange({ target: { value: selectedCustomer } });
       AllPayments();
     } catch (error) {
-      console.error('Error recording payment:', error);
+      console.error("Error recording payment:", error);
     }
   };
 
@@ -180,97 +263,101 @@ const Payment = () => {
 
   const handleDeletePayment = async (paymentId) => {
     const isConfirmed = window.confirm(
-      'Are you sure you want to delete this payment?'
+      "Are you sure you want to delete this payment?"
     );
 
     if (isConfirmed) {
       try {
-        await axios.delete(
-          `${BASE_API_URL}/payment/${paymentId}`
-        );
+        await axios.delete(`${BASE_API_URL}/payment/${paymentId}`);
         handleCustomerChange({ target: { value: selectedCustomer } });
         AllPayments();
       } catch (error) {
-        console.error('Error deleting payment:', error);
+        console.error("Error deleting payment:", error);
       }
     }
   };
 
- const generatePDF = () => {
+  const generatePDF = () => {
     const doc = new jsPDF();
-  
+
     // Set custom colors
-    const headerColor = '#4CAF50'; // Green color for the header
-    const textColor = '#000000'; // Black color for text
-    const footerColor = '#D32F2F'; // Red color for the footer
-    const amountColor = '#1976D2'; // Blue color for amounts
-    const cansColor = '#FFA000'; // Amber color for cans
-  
+    const headerColor = "#4CAF50"; // Green color for the header
+    const textColor = "#000000"; // Black color for text
+    const footerColor = "#D32F2F"; // Red color for the footer
+    const amountColor = "#1976D2"; // Blue color for amounts
+    const cansColor = "#FFA000"; // Amber color for cans
+
     // Load the logo image (if it's a URL, convert to base64 or download first)
-    const logoUrl = 'logoplant.jpg'; // Path to your image file
-  
+    const logoUrl = "logoplant.jpg"; // Path to your image file
+
     // Add the logo at the top center of the PDF
     const pageWidth = doc.internal.pageSize.getWidth();
     const logoWidth = 50;
     const logoHeight = 50;
     const logoX = (pageWidth - logoWidth) / 2; // Center the logo
-    doc.addImage(logoUrl, 'PNG', logoX, 10, logoWidth, logoHeight); // (image, format, x, y, width, height)
-  
+    doc.addImage(logoUrl, "PNG", logoX, 10, logoWidth, logoHeight); // (image, format, x, y, width, height)
+
     // Title below the logo
     doc.setFontSize(22);
     doc.setTextColor(headerColor);
-    doc.text('Customer Payment Report', pageWidth / 2, 70, { align: 'center' });
-  
+    doc.text("Customer Payment Report", pageWidth / 2, 70, { align: "center" });
+
     // Draw a colored line below the title
     doc.setDrawColor(headerColor);
     doc.setLineWidth(1);
     doc.line(20, 75, pageWidth - 20, 75);
-  
+
     // Customer Details Section
     if (customerDetails) {
       doc.setFontSize(14);
       doc.setTextColor(textColor);
-      doc.text(`Customer Name: ${customerDetails?.name || ''}`, 20, 90);
-      
+      doc.text(`Customer Name: ${customerDetails?.name || ""}`, 20, 90);
+
+      // Safely calculate amounts with fallback to 0 if undefined
+      const totalAmount = totalCustomerAmount || 0;
+      const receivedAmount = foundCustomer?.receivedAmount || 0;
+      const remainingBalance = totalAmount - receivedAmount;
+
       // Set color for amounts
       doc.setTextColor(amountColor);
-      doc.text(`Total Amount: RS ${totalCustomerAmount || 0}`, 20, 100);
-      doc.text(`Received Amount: RS ${foundCustomer?.receivedAmount || 0}`, 20, 110);
-      doc.text(`Remaining Balance: RS ${totalCustomerAmount - foundCustomer?.receivedAmount || 0}`, 20, 120);
-      
+      doc.text(`Total Amount: RS ${totals.totalAmount}`, 20, 100);
+      doc.text(`Received Amount: RS ${totals.receivedAmount}`, 20, 110);
+      doc.text(`Remaining Balance: RS ${totals.remainingBalance}`, 20, 120);
+
       // Set color for cans
       doc.setTextColor(cansColor);
-      doc.text(`Number of Bottles: ${quantities['1 Bottle']}`, 20, 130);
-      doc.text(`Number of Dispenser Bottles: ${quantities['2 Dispenser Bottle']}`, 20, 140); // 10px below the previous line
+      doc.text(`Number of Bottles: ${quantities["1 Bottle"] || 0}`, 20, 130);
+      doc.text(
+        `Number of Dispenser Bottles: ${quantities["2 Dispenser Bottle"] || 0}`,
+        20,
+        140
+      ); // 10px below the previous line
     }
-  
+
     // Footer Section
     const footerY = doc.internal.pageSize.getHeight() - 135; // Position the footer at the bottom with space for details
     doc.setDrawColor(footerColor);
     doc.setLineWidth(0.5);
     doc.line(20, footerY - 10, pageWidth - 20, footerY - 10); // Line above footer
-  
+
     doc.setFontSize(12);
     doc.setTextColor(footerColor);
-    doc.text('Contact Number: 0333-6566564', 20, footerY);
-    doc.text('JazzCash Number: 0333-6566564 (Account Name: IJAZ Ahmad)', 20, footerY + 10);
-    doc.text('Bank Account: 123456789', 20, footerY + 20);
+    doc.text("Contact Number: 0333-6566564", 20, footerY);
+    doc.text(
+      "JazzCash Number: 0333-6566564 (Account Name: IJAZ Ahmad)",
+      20,
+      footerY + 10
+    );
+    doc.text("Bank Account: 123456789", 20, footerY + 20);
 
-    
-  
-   // Save the PDF with customer name
-   const customerName = customerDetails?.name || 'unknown_customer'; // Fallback in case name is not available
-   const fileName = `customer_payment_report_${customerName}.pdf`.replace(/[^a-zA-Z0-9]/g, '_'); // Replace special characters with underscores
-   doc.save(fileName);
+    // Save the PDF with customer name
+    const customerName = customerDetails?.name || "unknown_customer"; // Fallback in case name is not available
+    const fileName = `customer_payment_report_${customerName}.pdf`.replace(
+      /[^a-zA-Z0-9]/g,
+      "_"
+    ); // Replace special characters with underscores
+    doc.save(fileName);
   };
-  
-  
-  
-  
-  
-  
-  
-  
 
   useEffect(() => {
     fetchTowns();
@@ -278,11 +365,15 @@ const Payment = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedCustomer && allBottles.length > 0) {
-      const newQuantities = calculateQuantities(allBottles, selectedCustomer);
-      setQuantities(newQuantities);
+    if (allBottles.length > 0 && allPayments.length > 0) {
+      const foundCustomer = allPayments.find(
+        (item) =>
+          item.customerId &&
+          String(item.customerId._id) === String(selectedCustomer)
+      );
+      console.log("Found customer after data load:", foundCustomer);
     }
-  }, [allBottles, selectedCustomer]);
+  }, [allBottles, allPayments, selectedCustomer]);
 
   return (
     <div className="container mt-4">
@@ -327,6 +418,26 @@ const Payment = () => {
           </div>
         )}
       </div>
+      {/* DatePicker for selecting payment date range */}
+      <div className="mb-3">
+        <label htmlFor="paymentStartDate" className="form-label">
+          Payment Start Date
+        </label>
+        <DatePicker
+          selected={startDate}
+          onChange={(date) => setStartDate(date)}
+          className="form-control"
+        />
+      </div>
+
+      {/* <div className="mb-3">
+            <label htmlFor="paymentEndDate" className="form-label">Payment End Date</label>
+            <DatePicker
+              selected={endDate}
+              onChange={date => setEndDate(date)}
+              className="form-control"
+            />
+          </div> */}
 
       {customerDetails ? (
         <div className="card p-4 mb-4 shadow-sm" id="payment-report">
@@ -335,25 +446,31 @@ const Payment = () => {
             <strong>Total Amount:</strong> RS {totalCustomerAmount || 0}
           </p>
           <p>
-            <strong>Received Amount:</strong> RS{' '}
-            {foundCustomer?.receivedAmount || 0}
+            <strong>Received Amount:</strong> RS {totals.receivedAmount || 0}
           </p>
           <p>
-            <strong>Remaining Balance:</strong> RS{' '}
-            {totalCustomerAmount - foundCustomer?.receivedAmount || 0}
+            <strong>Remaining Balance:</strong> RS{" "}
+            {totals.receivedAmount === 0
+              ? totalCustomerAmount
+              : totals.remainingBalance || 0}
           </p>
-          {/* <p>
-            <strong>Priviouse Balance:</strong> RS{' '}
-            {totalCustomerAmount - BalanceCustomer?.receivedAmount || 0}
-          </p> */}
 
           <p>
-            <strong>Bottles:</strong> {quantities['1 Bottle']}
+            <strong>All Months Remaining Balance:</strong> RS
+            {TotalRemaningBalance?.remainingBalance}
           </p>
           <p>
-            <strong>Dispensers Bottles:</strong>{' '}
-            {quantities['2 Dispenser Bottle']}
+            <strong>Grand Total Balance:</strong> RS
+            {totalCustomerAmount + TotalRemaningBalance?.remainingBalance}
           </p>
+
+          <div>
+      {/* Displaying the value for "1 Bottle" */}
+      <p>1 Bottle: {totalQtyByType["1 Bottle"]}</p>
+
+      {/* Displaying the value for "2 Dispenser Bottle" */}
+      <p>2 Dispenser Bottle: {totalQtyByType["2 Dispenser Bottle"]}</p>
+    </div>
 
           <div className="mb-3">
             <label htmlFor="paymentAmount" className="form-label">
@@ -369,14 +486,16 @@ const Payment = () => {
             />
           </div>
           <button className="btn btn-primary" onClick={handlePayment}>
-            {editPaymentId ? 'Update Payment' : 'Record Payment'}
+            {editPaymentId ? "Update Payment" : "Record Payment"}
           </button>
 
           <div className="mt-4">
             <h4>Payment History</h4>
             <ul className="list-group">
               {allPayments
-                .filter((payment) => payment.customerId?._id === customerDetails?._id)
+                .filter(
+                  (payment) => payment.customerId?._id === customerDetails?._id
+                )
                 .map((payment) => (
                   <li key={payment._id} className="list-group-item">
                     Amount Received: {payment.receivedAmount}
