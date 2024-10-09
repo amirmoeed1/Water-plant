@@ -450,7 +450,7 @@ const Payment = () => {
           </p>
           <p>
             <strong>Remaining Balance:</strong> RS{" "}
-            {totals.receivedAmount === 0
+            {totals.receivedAmount
               ? totalCustomerAmount
               : totals.remainingBalance || 0}
           </p>
